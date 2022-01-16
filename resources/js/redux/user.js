@@ -1,11 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'; 
+import { isEmpty } from 'ramda';
 
-let initialState = {}; //change to localStorage in the future
+const initialState = localStorage.getItem('user') || null; //change to localStorage in the future
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser: (slice, action) => action.payload
+        setUser: (slice, action) => {
+            if (isEmpty(action.payload)) {
+                localStorage.removeItem('user');
+            } else {
+                localStorage.setItem('user', JSON.stringify(action.payload))
+            }
+
+            return null;
+        },
     }
 });
 

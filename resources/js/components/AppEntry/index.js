@@ -1,14 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isEmpty } from 'ramda';
+import { useRoutes } from 'react-router-dom'
+import { isNil } from 'ramda';
 
-import Authed from '../../routes/Authed';
-import Guest from '../../routes/Guest';
+import routes from '../../routes';
 
 const AppEntry = () => {
     const user = useSelector((store) => store.user);
+    const routing = useRoutes(routes(!isNil(user)));
 
-    return isEmpty(user) ? <Authed /> : <Guest />;
+    return routing;
 };
 
 export default AppEntry;

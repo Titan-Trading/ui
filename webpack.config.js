@@ -1,5 +1,7 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
 const PATHS = {
     app: path.resolve(__dirname, 'resources/js'),
     base: path.resolve(__dirname, 'resources'),
@@ -8,6 +10,8 @@ const PATHS = {
     scss: path.resolve(__dirname, 'resources/scss'),
     dist: path.resolve(__dirname, 'dist')
 };
+
+dotenv.config();
 
 module.exports = env => ({
     entry: PATHS.entry,
@@ -20,7 +24,10 @@ module.exports = env => ({
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react']
+                        presets: [
+                            '@babel/preset-env', 
+                            '@babel/preset-react'
+                        ]
                     }
                 }
             },
@@ -59,6 +66,9 @@ module.exports = env => ({
         new HtmlWebpackPlugin({
             title: 'Simple Trader UI',
             template: 'index.html'
+        }),
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(process.env)
         })
     ],
     devServer: {

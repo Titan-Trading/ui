@@ -1,17 +1,9 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import DashboardLayout from './DashboardLayout';
+import Dashboard from "./Dashboard";
+import AuthedTest from "./AuthedTest";
 
-import Dashboard from './Dashboard';
-
-import { routes } from '../';
-
-const Authed = () => {
-    return (
-        <Routes>
-            <Route exact path={routes.authed.dashboard} component={() => <Dashboard />} />
-            <Navigate exact to={routes.authed.dashboard} />
-        </Routes>
-    );
+export { 
+    DashboardLayout,
+    Dashboard, 
+    AuthedTest 
 };
-
-export default Authed;
