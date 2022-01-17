@@ -1,10 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
+import { AppShell } from '@mantine/core';
 
 import { setUser } from '../../../redux/user';
-
-import './style.scss';
+import DashboardNavbar from './DashboardNavbar';
+import DashboardHeader from './DashboardHeader';
 
 const DashboardLayout = () => {
     const dispatch = useDispatch();
@@ -15,15 +16,12 @@ const DashboardLayout = () => {
     };
 
     return (
-        <>
-            <header>
-                <button onClick={() => handleLogout()}>Log Out</button>
-            </header>
-
-            <main>
-                <Outlet />
-            </main>
-        </>
+        <AppShell
+            padding="md"
+            navbar={<DashboardNavbar />}
+        >
+            <Outlet />
+        </AppShell>
     )
 };
 
