@@ -38,7 +38,7 @@ const Login = () => {
                         marginBottom: theme.spacing.lg
                     })}
                 >
-                    Incorrect Username or Password
+                    Incorrect Email or Password
                 </Alert>
             )}
 
