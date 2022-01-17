@@ -5,9 +5,14 @@ import Brand from './Brand';
 import MainMenu from './MainMenu';
 import UserMenu from './UserMenu';
 
-const DashboardNavbar = () => {
+const DashboardNavbar = ({ user }) => {
     return (
-        <Navbar padding="xs" width={{ base: 300 }}>
+        <Navbar 
+            width={{ base: 300 }} 
+            sx={(theme) => ({
+                padding: theme.spacing.md,
+            })}
+        >
             <Navbar.Section>
                 <Brand />
                 <Divider />
@@ -19,7 +24,7 @@ const DashboardNavbar = () => {
 
             <Navbar.Section>
                 <Divider />
-                <UserMenu />
+                <UserMenu user={user} />
             </Navbar.Section>
         </Navbar>
     )

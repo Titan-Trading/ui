@@ -16,9 +16,9 @@ const AppEntry = () => {
                 fontFamily: 'Oxygen, sans serif',
                 colors: {
                     'charcoal': [ '#5e727c', '#264653' ],
-                    'green': [ '#2A9D8F' ],
+                    'customGreen': [ '#2A9D8F' ],
                     'orange': [ '#E9C46A' ],
-                    'brick-red': ['#fefefe']
+                    'customRed': ['#fefefe']
                 },
                 spacing: { xs: 10, sm: 12, md: 16, lg: 20, xl: 24 },
             }}

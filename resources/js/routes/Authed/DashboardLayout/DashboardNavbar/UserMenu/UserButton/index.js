@@ -1,25 +1,23 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { BiChevronRight } from 'react-icons/bi'
 import { Group, Avatar, Text, UnstyledButton } from '@mantine/core';
-import { useSelector } from 'react-redux';
 
-const UserButton = () => {
-  const user = useSelector((store) => store.user);
-  console.log(user);
+const UserButton = forwardRef(({ user, ...other }, ref) => {
 
   return (
     <UnstyledButton
+      ref={ref}
       sx={(theme) => ({
         display: 'block',
         width: '100%',
-        padding: theme.spacing.md,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
+        borderRadius: '4px',
+        padding: theme.spacing.sm,
+        color: theme.black,
         '&:hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
+          backgroundColor: theme.colors.gray[2],
         },
       })}
+      {...other}
     >
       <Group>
         <Avatar src={null} radius="xl" />
@@ -38,6 +36,6 @@ const UserButton = () => {
       </Group>
     </UnstyledButton>
   )
-};
+});
 
 export default UserButton;
