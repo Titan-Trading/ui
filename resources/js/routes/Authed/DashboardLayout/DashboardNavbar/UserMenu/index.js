@@ -3,12 +3,16 @@ import { BsGear } from 'react-icons/bs';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { Menu } from '@mantine/core';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { setUser } from '../../../../../redux/user';
 import UserButton from './UserButton';
+import { PATHS } from '../../../..';
 
 const UserMenu = ({ user }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { authed } = PATHS;
 
     const handleLogout = () => {
         dispatch(setUser({}));
@@ -28,6 +32,7 @@ const UserMenu = ({ user }) => {
         >
             <Menu.Item
                 icon={<BsGear />}
+                onClick={() => navigate(authed.settings)}
             >
                 Settings
             </Menu.Item>

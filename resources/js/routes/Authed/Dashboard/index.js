@@ -1,18 +1,6 @@
-import axios from 'axios';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Title } from '@mantine/core';
 
-import { PATHS } from '../..';
-
-const Dashboard = () => {
-    return (
-        <>
-            <h1>Dashboard</h1>
-            <Link to={PATHS.authed.test}>
-                Authed Test
-            </Link>
-        </>
-    )
-};
+const Dashboard = () => <Title>Dashboard</Title>;
 
 export default Dashboard;

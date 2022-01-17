@@ -4,7 +4,8 @@ import { Navigate } from 'react-router-dom';
 import { 
     DashboardLayout,
     Dashboard,
-    AuthedTest
+    AuthedTest,
+    UserSettings
 } from './Authed';
 
 import {
@@ -19,7 +20,8 @@ import {
 const PATHS = {
     authed: {
         dashboard: '/dashboard',
-        test: '/test'
+        test: '/test',
+        settings: '/settings' //TODO change to /userId/settings
     },
     guest: {
         login: '/login'
@@ -43,6 +45,10 @@ const routes = isAuthed => [
             {
                 path: authed.test,
                 element: <AuthedTest />
+            },
+            {
+                path: authed.settings,
+                element: <UserSettings />,
             }
         ]
     },
