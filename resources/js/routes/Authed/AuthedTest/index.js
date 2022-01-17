@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { PATHS } from '../..';
+import { Title } from '@mantine/core';
 
-const AuthedTest = () => <h1>Authed Test</h1>;
+const AuthedTest = () => <Title>Authed Test</Title>;
 
 export default AuthedTest;

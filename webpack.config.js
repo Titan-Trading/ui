@@ -43,14 +43,7 @@ module.exports = env => ({
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
-                include: PATHS.image,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        limit: 500,
-                        name: 'media/[path][name].[ext]'
-                    }
-                }
+                type: 'asset/resource'
             }
         ]
     },
