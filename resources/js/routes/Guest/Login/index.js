@@ -1,46 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
-<<<<<<< Updated upstream
-=======
+
 import { InputWrapper, Input, PasswordInput, Button, Alert } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
->>>>>>> Stashed changes
 
 import { login } from '../../../api/user';
 import { setUser } from '../../../redux/user';
 
-import './style.scss';
-
 const Login = () => {
     const { handleSubmit, register, formState: { errors } } = useForm();
+    const [ loading, setLoading ] = useState(false);
+    const [ error, setError ] = useState(false);
     const dispatch = useDispatch();
 
     const submit = (data) => {
+        setLoading(true);
         login({ ...data }).then(({ data }) => {
+            setLoading(false);
+            setError(false);
+
             dispatch(setUser(data));
             window.location.reload();
-        }).catch((err) => console.log(err));
+        }).catch((err) => {
+            setLoading(false);
+            setError(true);
+        });
     };
 
     return (
         <form onSubmit={handleSubmit(submit)}>
-<<<<<<< Updated upstream
-            <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" {...register('email', {  required: true })} />
-                {errors.email && <span className="error">This field is required</span>}
-            </div>
-            <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input type="password" {...register('password', { required: true })} />
-                {errors.password && <span className="error">This field is required</span>}
-            </div>
-            <div className="form-group">
-                <button type="submit">Submit</button>
-            </div>
-=======
             {error && (
                 <Alert 
                     icon={<HiXCircle />}
@@ -96,7 +86,6 @@ const Login = () => {
                     Forgot Password
                 </Button>
             </Link>
->>>>>>> Stashed changes
         </form>
     )
 }

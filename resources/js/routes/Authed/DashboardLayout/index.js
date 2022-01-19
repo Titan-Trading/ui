@@ -1,19 +1,12 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
 
-import { setUser } from '../../../redux/user';
-
-import './style.scss';
+import DashboardNavbar from './DashboardNavbar';
 
 const DashboardLayout = () => {
-    const dispatch = useDispatch();
-
-    const handleLogout = () => {
-        dispatch(setUser({}));
-        window.location.reload();
-    };
+    const user = useSelector((store) => store.user);
 
     const items = [
         { title: 'Mantine', href: 'https://mantine.dev' },
