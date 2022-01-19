@@ -1,10 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-<<<<<<< Updated upstream
-=======
 import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
->>>>>>> Stashed changes
 
 import { setUser } from '../../../redux/user';
 
@@ -29,17 +26,6 @@ const DashboardLayout = () => {
       ));
 
     return (
-<<<<<<< Updated upstream
-        <>
-            <header>
-                <button onClick={() => handleLogout()}>Log Out</button>
-            </header>
-
-            <main>
-                <Outlet />
-            </main>
-        </>
-=======
         <AppShell
             padding="xl"
             navbar={<DashboardNavbar user={user} />}
@@ -58,7 +44,6 @@ const DashboardLayout = () => {
             </Box>
             <Outlet />
         </AppShell>
->>>>>>> Stashed changes
     )
 };
 
