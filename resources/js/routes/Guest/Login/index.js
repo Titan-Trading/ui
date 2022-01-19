@@ -64,7 +64,7 @@ const Login = () => {
                     marginBottom: theme.spacing.lg
                 })}
             >
-                <PasswordInput id="password" type="password" {...register('password', {  required: true })} />
+                <PasswordInput {...register('password', {  required: true })} />
             </InputWrapper>
 
             <Button 
