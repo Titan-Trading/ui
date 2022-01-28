@@ -1,9 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { BiChevronRight } from 'react-icons/bi'
 import { Group, Avatar, Text, UnstyledButton } from '@mantine/core';
+import { useSelector } from 'react-redux';
 
 const UserButton = forwardRef(({ user, ...other }, ref) => {
-
+  const test = useSelector((store) => store.test);
+  
   return (
     <UnstyledButton
       ref={ref}
@@ -24,7 +26,7 @@ const UserButton = forwardRef(({ user, ...other }, ref) => {
 
         <div style={{ flex: 1 }}>
           <Text size="sm" weight={500}>
-            Testing
+            {test}
           </Text>
 
           <Text color="dimmed" size="xs">

@@ -1,5 +1,7 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 import { useSelector } from 'react-redux';
 import { useRoutes } from 'react-router-dom'
 import { isNil } from 'ramda';
@@ -23,7 +25,14 @@ const AppEntry = () => {
                 spacing: { xs: 10, sm: 12, md: 16, lg: 20, xl: 24 },
             }}
         >
-            {routing}
+            <NotificationsProvider
+                position="top-right" 
+                zIndex={1985}
+            >
+                <ModalsProvider>
+                    {routing}
+                </ModalsProvider>
+            </NotificationsProvider>
         </MantineProvider>
     );
 };
