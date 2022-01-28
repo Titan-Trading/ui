@@ -4,13 +4,9 @@ import { Outlet } from 'react-router-dom';
 import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
 
 import DashboardNavbar from './DashboardNavbar';
-import { useDispatch } from 'react-redux';
-import { setTest } from '../../../redux/test'
 
 const DashboardLayout = () => {
     const user = useSelector((store) => store.user);
-    const dispatch = useDispatch();
-
     const items = [
         { title: 'Mantine', href: 'https://mantine.dev' },
         { title: 'Mantine hooks', href: 'https://mantine.dev/hooks/getting-started' },
@@ -20,10 +16,6 @@ const DashboardLayout = () => {
           {item.title}
         </Anchor>
       ));
-
-    const updateName = () => {
-        dispatch(setTest('Another Name'))
-    };
 
     return (
         <AppShell
@@ -37,7 +29,7 @@ const DashboardLayout = () => {
                     marginBottom: '50px'
                 })}
             >
-                <Title onClick={() => updateName()} style={{ marginBottom: '15px' }}>Page Title</Title>
+                <Title style={{ marginBottom: '15px' }}>Page Title</Title>
                 <Breadcrumbs>
                     {items}
                 </Breadcrumbs>

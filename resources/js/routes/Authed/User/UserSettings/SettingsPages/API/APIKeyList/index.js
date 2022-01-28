@@ -55,6 +55,8 @@ const APIKeyList = ({ keys, setKeys, loading }) => {
                     </>
                 ),
                 closeOnCancel: false,
+                closeOnClickOutside: false,
+                closeOnEscape: false
             });
         }
     });
