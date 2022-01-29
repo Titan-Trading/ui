@@ -1,9 +1,8 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { BiChevronRight } from 'react-icons/bi'
 import { Group, Avatar, Text, UnstyledButton } from '@mantine/core';
 
-const UserButton = forwardRef(({ user, ...other }, ref) => {
-
+const UserButton = forwardRef(({ user, ...other }, ref) => {  
   return (
     <UnstyledButton
       ref={ref}

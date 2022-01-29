@@ -18,6 +18,8 @@ main {
     width: 100%;
 }
 
-a {
+a, button {
+    outline: none !important;
+    box-shadow: none !important;
     text-decoration: none;
 }

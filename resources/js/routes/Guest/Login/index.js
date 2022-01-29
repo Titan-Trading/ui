@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
-import { InputWrapper, Input, Button, Alert } from '@mantine/core';
+
+import { InputWrapper, Input, PasswordInput, Button, Alert } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
-import { login } from '../../../api/user';
+import { login } from '../../../api/users';
 import { setUser } from '../../../redux/user';
 
 const Login = () => {
     const { handleSubmit, register, formState: { errors } } = useForm();
-    const [ loading, setLoading ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState(false);
     const dispatch = useDispatch();
 
     const submit = (data) => {
         setLoading(true);
         login({ ...data }).then(({ data }) => {
-            setLoading(false);
-            setError(false);
-
             dispatch(setUser(data));
             window.location.reload();
         }).catch((err) => {
@@ -43,7 +41,6 @@ const Login = () => {
             )}
 
             <InputWrapper
-                id="email"
                 required
                 label="Email"
                 error={errors.email && "Email is required"}
@@ -55,7 +52,6 @@ const Login = () => {
             </InputWrapper>
 
             <InputWrapper
-                id="password"
                 required
                 label="Password"
                 error={errors.password && "Password is required"}
@@ -63,7 +59,7 @@ const Login = () => {
                     marginBottom: theme.spacing.lg
                 })}
             >
-                <Input id="password" type="password" {...register('password', {  required: true })} />
+                <PasswordInput {...register('password', {  required: true })} />
             </InputWrapper>
 
             <Button 
