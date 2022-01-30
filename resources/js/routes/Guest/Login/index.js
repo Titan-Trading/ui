@@ -11,7 +11,7 @@ import { setUser } from '../../../redux/user';
 
 const Login = () => {
     const { handleSubmit, register, formState: { errors } } = useForm();
-    const [ loading, setLoading ] = useState(true);
+    const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(false);
     const dispatch = useDispatch();
 
