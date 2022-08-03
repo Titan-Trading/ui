@@ -5,7 +5,7 @@ import { isEmpty } from 'ramda';
 
 import CEFormStepper from './CEFormStepper';
 
-interface IConnectedExchange {
+interface IExchangeAccount {
     opened: boolean;
     setOpened: any;
     formData?: IFormData | {};
@@ -20,10 +20,11 @@ export interface IFormData {
     connection_option?: any;
     api_key?: string;
     api_key_secret?: string;
+    api_key_passphrase?: string;
     wallet_private_key?: string;
 }
 
-const ConnectedExchange = ({
+const ExchangeAccount = ({
     opened, 
     setOpened, 
     formData = {}, 
@@ -31,7 +32,7 @@ const ConnectedExchange = ({
     loading,
     success,
     setSuccess
-}: IConnectedExchange) => {
+}: IExchangeAccount) => {
     const { reset } = useForm<IFormData>();
 
     const handleClose = () => {
@@ -48,7 +49,7 @@ const ConnectedExchange = ({
         <Modal
             opened={opened}
             onClose={() => handleClose()}
-            title={isEmpty(formData) ? 'Connect an Exchange' : 'Edit Connected Exchange'}
+            title={isEmpty(formData) ? 'Connect an Exchange Account' : 'Edit Exchange Account'}
             size="lg"
             closeOnEscape={false}
             closeOnClickOutside={false}
@@ -63,4 +64,4 @@ const ConnectedExchange = ({
     );
 };
 
-export default ConnectedExchange;
+export default ExchangeAccount;

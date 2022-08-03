@@ -1,11 +1,11 @@
 import DashboardLayout from './DashboardLayout';
 import Dashboard from './Dashboard';
-import AuthedTest from './AuthedTest';
+import LabDashboard from './LabDashboard';
 import UserSettings from './User';
 
 export { 
     DashboardLayout,
     Dashboard, 
-    AuthedTest,
+    LabDashboard,
     UserSettings
 };

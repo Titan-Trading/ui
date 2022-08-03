@@ -20,7 +20,6 @@ const UserMenu = ({ user }: IUserMenu) => {
 
     const handleLogout = () => {
         dispatch(setUser({}));
-        window.location.reload();
     };
 
     return (

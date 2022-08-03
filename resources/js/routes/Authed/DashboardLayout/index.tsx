@@ -6,7 +6,7 @@ import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
 import DashboardNavbar from './DashboardNavbar';
 
 const DashboardLayout = () => {
-    const user = useSelector((store: any) => store.user);
+    const auth = useSelector((store: any) => store.user);
     const items = [
         { title: 'Mantine', href: 'https://mantine.dev' },
         { title: 'Mantine hooks', href: 'https://mantine.dev/hooks/getting-started' },
@@ -20,7 +20,7 @@ const DashboardLayout = () => {
     return (
         <AppShell
             padding="xl"
-            navbar={<DashboardNavbar user={user} />}
+            navbar={<DashboardNavbar user={auth.user} />}
         >
             <Box
                 sx={(theme) => ({
@@ -29,10 +29,10 @@ const DashboardLayout = () => {
                     marginBottom: '50px'
                 })}
             >
-                <Title style={{ marginBottom: '15px' }}>Page Title</Title>
+                {/* <Title style={{ marginBottom: '15px' }}>Page Title</Title>
                 <Breadcrumbs>
                     {items}
-                </Breadcrumbs>
+                </Breadcrumbs> */}
             </Box>
             <Outlet />
         </AppShell>

@@ -4,34 +4,34 @@ import { useModals } from '@mantine/modals';
 import { useNotifications } from '@mantine/notifications';
 import { filter } from 'ramda';
 
-import { IConnectedExchange } from '../';
+import { IExchangeAccount } from '../index';
 import List from 'Components/List';
-import { deleteConnectedExchange } from 'API/connectedExchanges';
+import { deleteExchangeAccount } from 'API/exchangeAccounts';
 
-interface IConnectedExchangeList {
-    connectedExchanges: IConnectedExchange[];
-    setConnectedExchanges: any;
+interface IExchangeAccountList {
+    exchangeAccounts: IExchangeAccount[];
+    setExchangeAccounts: any;
     loading: boolean;
 }
 
-const ConnectedExchangeList = ({
-    connectedExchanges,
-    setConnectedExchanges,
+const ExchangeAccountList = ({
+    exchangeAccounts,
+    setExchangeAccounts,
     loading
-}: IConnectedExchangeList) => {
+}: IExchangeAccountList) => {
     const modals = useModals();
     const notifications = useNotifications();
 
     const deleteModalSettings = {
         title: 'Are you sure?',
-        labels: { confirm: 'Delete Connected Exchange', cancel: 'Cancel' },
+        labels: { confirm: 'Delete Exchange Account', cancel: 'Cancel' },
         confirmProps: { color: 'red' },
         closeOnConfirm: false,
     };
 
     const DeleteModalText = () => (
         <Text size="sm">
-            Once this connected exchange is deleted, it cannot be recovered and this 
+            Once this exchange account is deleted, it cannot be recovered and this 
             action cannot be undone.
         </Text>
     );
@@ -39,27 +39,27 @@ const ConnectedExchangeList = ({
     const EmptyMessage = () => {
         return (
             <p>
-                No <strong>Connected Exchanges</strong> exist
+                No <strong>Exchange Accounts</strong> exist
             </p>
         );
     };
 
-    const openConfirmModal = (exchange: IConnectedExchange) => modals.openConfirmModal({
+    const openConfirmModal = (exchange: IExchangeAccount) => modals.openConfirmModal({
         ...deleteModalSettings,
         children: <DeleteModalText />,
         onConfirm: () => {
-            deleteConnectedExchange(exchange.id).then(() => {
-                setConnectedExchanges(filter(e => e.id !== exchange.id, connectedExchanges));
+            deleteExchangeAccount(exchange.id).then(() => {
+                setExchangeAccounts(filter(e => e.id !== exchange.id, exchangeAccounts));
                 modals.closeAll();
                 notifications.showNotification({
                     title: 'Success!',
-                    message: 'Successfully deleted Connected Exchange',
+                    message: 'Successfully deleted Exchange Accounts',
                 });
             }).catch(() => {
                 modals.closeAll();
                 notifications.showNotification({
                     title: 'Error!',
-                    message: 'Failed to delete Connected Exchange',
+                    message: 'Failed to delete Exchange Accounts',
                     color: 'red'
                 });
             });
@@ -79,7 +79,7 @@ const ConnectedExchangeList = ({
         }
     });
 
-    const openContentModal = (exchange: IConnectedExchange) => modals.openModal({
+    const openContentModal = (exchange: IExchangeAccount) => modals.openModal({
         title: exchange.name,
         children: (
             <>
@@ -99,7 +99,7 @@ const ConnectedExchangeList = ({
     return (
         <List 
             loading={loading}
-            items={connectedExchanges}
+            items={exchangeAccounts}
             onView={openContentModal}
             onDelete={openConfirmModal}
             emptyMessage={<EmptyMessage />}
@@ -107,4 +107,4 @@ const ConnectedExchangeList = ({
     );
 };
 
-export default ConnectedExchangeList;
+export default ExchangeAccountList;

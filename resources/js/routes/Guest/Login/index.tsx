@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
 import { Button, Alert } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { login } from 'API/users';
 import { setUser } from 'Redux/user';
@@ -23,9 +23,8 @@ const Login = () => {
     const submit = (data: ILoginFormData) => {
         setLoading(true);
 
-        login(data).then(({ data }: any) => {
+        login(data).then(async ({ data }: any) => {
             dispatch(setUser(data));
-            window.location.reload();
         }).catch((err) => {
             console.log(err);
 

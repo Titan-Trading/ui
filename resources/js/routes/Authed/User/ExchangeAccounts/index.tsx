@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Title, Alert } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
 
-import CreateExchangeConnection from './Create';
-import ConnectedExchangeList from './ConnectedExchangeList';
-import { getConnectedExchanges } from 'API/connectedExchanges';
+import CreateExchangeAccount from './Create';
+import ExchangeAccountList from './ExchangeAccountList';
+import { getExchangeAccounts } from 'API/exchangeAccounts';
 
-export interface IConnectedExchange {
+export interface IExchangeAccount {
     name?: string,
     id: number,
     user_id: number;
@@ -21,16 +21,16 @@ interface IExchangeObj {
 }
 
 
-const ConnectedExchanges = () => {
-    const [ connectedExchanges, setConnectedExchanges ] = useState<IConnectedExchange[]>([]);
+const ExchangeAccounts = () => {
+    const [ exchangeAccounts, setExchangeAccounts ] = useState<IExchangeAccount[]>([]);
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ error, setError ] = useState<boolean>(false);
 
     useEffect(() => {
         setError(false);
 
-        getConnectedExchanges().then(({ data }) => {
-            data = data.map((d: IConnectedExchange) => {
+        getExchangeAccounts().then(({ data }) => {
+            data = data.map((d: IExchangeAccount) => {
                 return {
                     api_key: d.api_key,
                     name: d.exchange.name,
@@ -40,7 +40,7 @@ const ConnectedExchanges = () => {
                 };
             });
 
-            setConnectedExchanges(data);
+            setExchangeAccounts(data);
             setLoading(false);
         }).catch(() => {
             setLoading(false);
@@ -50,10 +50,10 @@ const ConnectedExchanges = () => {
 
     return (
         <>
-            <Title order={2} style={{ margin: '25px 0' }}>Connected Exchanges</Title>
-            <CreateExchangeConnection 
-                connectedExchanges={connectedExchanges} 
-                setConnectedExchanges={setConnectedExchanges} 
+            <Title order={2} style={{ margin: '25px 0' }}>Connected Exchange Accounts</Title>
+            <CreateExchangeAccount 
+                exchangeAccounts={exchangeAccounts} 
+                setExchangeAccounts={setExchangeAccounts} 
             />
 
             {error ? (
@@ -61,9 +61,9 @@ const ConnectedExchanges = () => {
                     Error: Unable to retrieve connected exchanges
                 </Alert>
             ) : (
-                <ConnectedExchangeList 
-                    connectedExchanges={connectedExchanges} 
-                    setConnectedExchanges={setConnectedExchanges} 
+                <ExchangeAccountList 
+                    exchangeAccounts={exchangeAccounts} 
+                    setExchangeAccounts={setExchangeAccounts} 
                     loading={loading}
                 />
             )}
@@ -71,4 +71,4 @@ const ConnectedExchanges = () => {
     );
 };
 
-export default ConnectedExchanges;
+export default ExchangeAccounts;

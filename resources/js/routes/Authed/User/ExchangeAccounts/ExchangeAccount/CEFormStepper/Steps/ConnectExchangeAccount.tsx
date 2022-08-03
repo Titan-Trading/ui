@@ -5,7 +5,7 @@ import { Controller } from 'react-hook-form';
 import Input from 'Components/Input';
 import { getExchanges } from 'API/exchanges';
 
-interface IConnectExchange {
+interface IExchangeAccount {
     control: any;
     register: any;
     errors: any;
@@ -17,7 +17,7 @@ interface IExchange {
     label: string;
 }
 
-const ConnectExchange = ({ register, errors, control }: IConnectExchange) => {
+const ConnectExchangeAccount = ({ register, errors, control }: IExchangeAccount) => {
     const [ exchanges, setExchanges ] = useState<IExchange[]>([]);
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ error, setError ] = useState<boolean>(false);
@@ -114,10 +114,16 @@ const ConnectExchange = ({ register, errors, control }: IConnectExchange) => {
                                         {...register('api_key', { required: true })}
                                     />
                                     <Input
-                                        label="API Secret"
+                                        label="API Key Secret"
                                         required
-                                        error={errors.api_key_secret && 'API Secret is Required'}
+                                        error={errors.api_key_secret && 'API Key Secret is Required'}
                                         {...register('api_key_secret', { required: true })}
+                                    />
+                                    <Input
+                                        label="API Key Passphrase"
+                                        required
+                                        error={errors.api_key_passphrase && 'API Key Passphrase is Required'}
+                                        {...register('api_key_passphrase', { required: true })}
                                     />
                                 </>
                             )}
@@ -129,4 +135,4 @@ const ConnectExchange = ({ register, errors, control }: IConnectExchange) => {
     );
 };
 
-export default ConnectExchange;
+export default ConnectExchangeAccount;

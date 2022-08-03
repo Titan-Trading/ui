@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { 
     DashboardLayout,
     Dashboard,
-    AuthedTest,
+    LabDashboard,
     UserSettings
 } from './Authed';
 
@@ -19,8 +19,8 @@ import {
 
 const PATHS = {
     authed: {
-        dashboard: '/dashboard',
-        test: '/test',
+        dashboard: '/',
+        lab_dashboard: '/lab',
         settings: '/settings' //TODO change to /userId/settings
     },
     guest: {
@@ -43,8 +43,8 @@ const routes = (isAuthed: boolean) => [
                 element: <Dashboard />
             },
             {
-                path: authed.test,
-                element: <AuthedTest />
+                path: authed.lab_dashboard,
+                element: <LabDashboard />
             },
             {
                 path: authed.settings,
@@ -56,8 +56,8 @@ const routes = (isAuthed: boolean) => [
         path: '/',
         element: !isAuthed ? <GuestLayout /> : <Navigate to={authed.dashboard} />,
         children: [
-          { path: 'login', element: <Login /> },
-          { path: '/', element: <Navigate to={guest.login} /> },
+            { path: 'login', element: <Login /> },
+            { path: '/', element: <Navigate to={guest.login} /> },
         ],
     },
     {

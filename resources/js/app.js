@@ -1,17 +1,21 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import LogRocket from 'logrocket';
 import {io} from 'socket.io-client';
+import JsonParser from 'socket.io-json-parser';
 
 import rootReducer from './redux';
 import { showLoading, hideLoading, setError } from './redux/layout';
 import AppEntry from './components/AppEntry'
 
 import '../scss/app.scss';
+import { getConnectToken } from 'API/connectApiTokens';
+import { getExchangeAccounts } from 'API/exchangeAccounts';
+import userStore from './redux/user';
 
 // LogRocket.init('');
 
@@ -36,15 +40,48 @@ axios.interceptors.response.use((response) => {
     return Promise.reject(error);
 });
 
-const socket = io(process.env.WEBSOCKET_SERVER_URL);
 
-socket.on('message', (data) => {
-    console.log(data);
-});
-
-socket.on('connect', () => {
-    console.log('connected to server!');
-});
+const user = localStorage.getItem('user') || null;
+if(user) {
+    getConnectToken().then(res => {
+        const socket = io(process.env.WEBSOCKET_SERVER_URL, {
+            auth: {
+                token: res.data.access_token
+            },
+            parser: JsonParser
+        });
+    
+        socket.on('message', (message) => {
+            console.log(message.data);
+        });
+    
+        socket.on('channel_joined', (message) => {
+            console.log(message);
+        });
+        
+        socket.on('connect', () => {
+            console.log('connected to server!');
+    
+            const symbol = 'ETH-USDT';
+    
+            getExchangeAccounts().then((res) => {
+                if(res.data.length) {
+                    for(let iA in res.data) {
+                        socket.emit('join_channel', 'EXCHANGE_ACCOUNT_DATA:TRADE_UPDATE:' + res.data[iA].id);
+                    }
+                }
+            })
+    
+            // socket.emit('join_channel', 'EXCHANGE_DATA:ORDER_UPDATE:' + symbol);
+            // socket.emit('join_channel', 'EXCHANGE_DATA:ORDERBOOK_UPDATE:' + symbol);
+            // socket.emit('join_channel', 'EXCHANGE_DATA:KLINE_UPDATE:' + symbol)
+        });
+    
+        socket.on('disconnect', () => {
+            console.log('disconnect from server');
+        });
+    });
+}
 
 render(
     <Provider store={store}>

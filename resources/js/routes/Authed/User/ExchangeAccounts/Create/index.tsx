@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Button } from '@mantine/core';
 
-import { IConnectedExchange } from '../';
-import ConnectedExchange, { IFormData } from '../ConnectedExchange';
-import { createConnectedExchange } from 'API/connectedExchanges';
+import { IExchangeAccount } from '../../ExchangeAccounts';
+import ExchangeAccount, { IFormData } from '../ExchangeAccount';
+import { createExchangeAccount } from 'API/exchangeAccounts';
 
-interface ICreateExchangeConnection {
-    connectedExchanges: IConnectedExchange[];
-    setConnectedExchanges: any;
+interface ICreateExchangeAccount {
+    exchangeAccounts: IExchangeAccount[];
+    setExchangeAccounts: any;
 }
 
 const CreateExchangeConnection = ({
-    connectedExchanges,
-    setConnectedExchanges
-}: ICreateExchangeConnection) => {
+    exchangeAccounts,
+    setExchangeAccounts
+}: ICreateExchangeAccount) => {
     const [ opened, setOpened ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ success, setSuccess ] = useState<boolean>(false);
@@ -29,15 +29,15 @@ const CreateExchangeConnection = ({
         const response = new Promise((resolve, reject) => {
             const name = data.exchange_id.name;
 
-            createConnectedExchange(payload).then(({ data }) => {
-                const newConnectedExchange = {
+            createExchangeAccount(payload).then(({ data }) => {
+                const newExchangeAccount = {
                     ...data,
                     name: name
                 };
 
                 setLoading(false);
                 resolve(payload);
-                setConnectedExchanges([ ...connectedExchanges, newConnectedExchange ]);
+                setExchangeAccounts([ ...exchangeAccounts, newExchangeAccount ]);
             }).catch(() => {
                 //error is taken care of via the stepper
                 setLoading(false);
@@ -50,8 +50,8 @@ const CreateExchangeConnection = ({
 
     return (
         <>
-            <Button onClick={() => setOpened(true)}>Connect an Exchange</Button>
-            <ConnectedExchange 
+            <Button onClick={() => setOpened(true)}>Connect an Exchange Account</Button>
+            <ExchangeAccount 
                 opened={opened} 
                 setOpened={setOpened} 
                 loading={loading}

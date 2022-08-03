@@ -20,11 +20,11 @@ const MainMenu = () => {
                 />
             </Link>
 
-            <Link to={authed.test}>
+            <Link to={authed.lab_dashboard}>
                 <MenuButton
-                    active={pathname === authed.test}
+                    active={pathname === authed.lab_dashboard}
                     icon={<FaDraftingCompass />}
-                    text="Test"
+                    text="Laboratory"
                 />
             </Link>
         </>

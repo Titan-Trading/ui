@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { SegmentedControl, Box } from '@mantine/core';
 
 import API from './API';
-import ConnectedExchanges from './ConnectedExchanges';
+import ExchangeAccounts from './ExchangeAccounts';
 
 const UserSettings = () => {
     const [ tab, setTab ] = useState<string>('1');
     const settingsPages = [
         <API key={0} />,
-        <ConnectedExchanges key={1} />
+        <ExchangeAccounts key={1} />
     ];
 
     return (
@@ -21,7 +21,7 @@ const UserSettings = () => {
                 color="blue"
                 data={[
                     { label: 'API Keys', value: '1' },
-                    { label: 'Connected Exchanges', value: '2' }
+                    { label: 'Exchange Accounts', value: '2' }
                 ]}
             />
             <Box styles={{ paddingTop: '75px' }}>

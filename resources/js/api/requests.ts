@@ -3,8 +3,6 @@ import { isEmpty } from 'ramda';
 
 let isRefreshing = false;
 
-console.log(process.env.API_URL);
-
 const Request = axios.create({
     baseURL: process.env.API_URL,
     headers: {

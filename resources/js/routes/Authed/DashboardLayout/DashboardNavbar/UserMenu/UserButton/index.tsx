@@ -27,11 +27,11 @@ const UserButton = forwardRef(({ user, ...other }: IUserButton, ref: any) => {
 
         <div style={{ flex: 1 }}>
           <Text size="sm" weight={500}>
-            Testing
+            {user.metadata.name}
           </Text>
 
           <Text color="dimmed" size="xs">
-            test@email.com
+            {user.metadata.email}
           </Text>
         </div>
 
