@@ -28,14 +28,14 @@
       "API/*": ["resources/js/api/*"],
       "Redux/*": ["resources/js/redux/*"],
       "Helpers": ["resources/js/helpers/index.tsx"],
-      "Routes/*": ["resources/js/routes/*"],
-      "Paths": ["resources/js/routes/index.tsx"],
+      "Routes/*": ["resources/js/pages/*"],
+      "Paths": ["resources/js/pages/index.tsx"],
       "Images/*": ["resources/images/*"]
     }
   },
   "include": ["./resources/**/*"],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
   ]
 }

@@ -55,16 +55,15 @@ module.exports = env => ({
             API: path.resolve(__dirname, 'resources/js/api/'),
             Redux: path.resolve(__dirname, 'resources/js/redux/'),
             Helpers: path.resolve(__dirname, 'resources/js/helpers/index.tsx'),
-            Routes: path.resolve(__dirname, 'resources/js/routes/'),
-            Paths: path.resolve(__dirname, 'resources/js/routes/index.tsx'),
+            Routes: path.resolve(__dirname, 'resources/js/pages/'),
+            Paths: path.resolve(__dirname, 'resources/js/pages/index.tsx'),
             Images: path.resolve(__dirname, 'resources/images/'),
             Variables: path.resolve(__dirname, 'resources/scss/_variables.scss')
         }
     },
     output: {
         path: PATHS.dist,
-        filename: '[name].bundle.js',
-        clean: true
+        filename: 'app.js',
     },
     plugins: [
         require('autoprefixer'),
@@ -75,5 +74,19 @@ module.exports = env => ({
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(process.env)
         })
-    ]
+    ],
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'dist'),
+            watch: true
+        },
+        // client: {
+        //     overlay: true
+        // },
+        compress: false,
+        historyApiFallback: true,
+        hot: true,
+        port: 3000,
+        open: true
+    }
 });

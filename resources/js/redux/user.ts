@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'; 
 import { isEmpty } from 'ramda';
-import jwt_decode from 'jwt-decode';
 
-const userData = localStorage.getItem('user');
-const initialState = userData ? JSON.parse(userData) : null; //change to localStorage in the future
+const initialState = localStorage.getItem('user') || null; //change to localStorage in the future
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -11,15 +9,11 @@ const userSlice = createSlice({
         setUser: (slice, action) => {
             if (isEmpty(action.payload)) {
                 localStorage.removeItem('user');
-
-                return null;
+            } else {
+                localStorage.setItem('user', JSON.stringify(action.payload))
             }
 
-            const decoded = jwt_decode(action.payload.access_token);
-            const user = {...action.payload, user: decoded};
-
-            localStorage.setItem('user', JSON.stringify(user));            
-            return user;
+            return null;
         },
     }
 });

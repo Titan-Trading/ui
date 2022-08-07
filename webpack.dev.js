@@ -55,8 +55,8 @@ module.exports = env => ({
             API: path.resolve(__dirname, 'resources/js/api/'),
             Redux: path.resolve(__dirname, 'resources/js/redux/'),
             Helpers: path.resolve(__dirname, 'resources/js/helpers/index.tsx'),
-            Routes: path.resolve(__dirname, 'resources/js/routes/'),
-            Paths: path.resolve(__dirname, 'resources/js/routes/index.tsx'),
+            Routes: path.resolve(__dirname, 'resources/js/pages/'),
+            Paths: path.resolve(__dirname, 'resources/js/pages/index.tsx'),
             Images: path.resolve(__dirname, 'resources/images/'),
             Variables: path.resolve(__dirname, 'resources/scss/_variables.scss')
         }
@@ -80,9 +80,6 @@ module.exports = env => ({
             directory: path.join(__dirname, 'dist'),
             watch: true
         },
-        // client: {
-        //     overlay: true
-        // },
         compress: false,
         historyApiFallback: true,
         hot: true,
