@@ -63,7 +63,8 @@ module.exports = env => ({
     },
     output: {
         path: PATHS.dist,
-        filename: 'app.js',
+        filename: '[name].bundle.js',
+        clean: true
     },
     plugins: [
         require('autoprefixer'),
@@ -74,19 +75,5 @@ module.exports = env => ({
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(process.env)
         })
-    ],
-    devServer: {
-        static: {
-            directory: path.join(__dirname, 'dist'),
-            watch: true
-        },
-        // client: {
-        //     overlay: true
-        // },
-        compress: false,
-        historyApiFallback: true,
-        hot: true,
-        port: 3000,
-        open: true
-    }
+    ]
 });

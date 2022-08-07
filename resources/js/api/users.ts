@@ -9,3 +9,8 @@ export const login = (data: ILoginFormData) => Request({
     url: `${API_URL}/auth/login`,
     data: data
 });
+
+export const getUser = (id: number) => Request({
+    method: 'GET',
+    url: `${API_URL}/users/${id}`
+});

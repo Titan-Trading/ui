@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LoadingOverlay, Select, Group, Text, RadioGroup, Radio, Box } from '@mantine/core'
 import { Controller } from 'react-hook-form';
 
-import Input from 'Components/Input';
+import { Input } from 'Components/Forms';
 import { getExchanges } from 'API/exchanges';
 
 interface IExchangeAccount {

@@ -5,7 +5,6 @@ import {
     DashboardLayout,
     Dashboard,
     Laboratory,
-    LabDashboard,
     UserSettings
 } from './Authed';
 
@@ -20,9 +19,8 @@ import {
 
 const PATHS = {
     authed: {
-        laboratory: '/laboratory',
         dashboard: '/',
-        lab_dashboard: '/lab',
+        laboratory: '/laboratory',
         settings: '/settings' //TODO change to /userId/settings
     },
     guest: {
@@ -47,10 +45,6 @@ const routes = (isAuthed: boolean) => [
             {
                 path: authed.laboratory,
                 element: <Laboratory />,
-            },
-            {
-                path: authed.lab_dashboard,
-                element: <LabDashboard />
             },
             {
                 path: authed.settings,
