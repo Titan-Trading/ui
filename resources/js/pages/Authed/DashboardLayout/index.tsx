@@ -7,6 +7,8 @@ import DashboardNavbar from './DashboardNavbar';
 
 const DashboardLayout = () => {
     const user = useSelector((store: any) => store.user);
+    const { title } = useSelector((store: any) => store.layout)
+
     const items = [
         { title: 'Mantine', href: 'https://mantine.dev' },
         { title: 'Mantine hooks', href: 'https://mantine.dev/hooks/getting-started' },
@@ -29,8 +31,9 @@ const DashboardLayout = () => {
                     marginBottom: '50px'
                 })}
             >
-                {/* <Title style={{ marginBottom: '15px' }}>Page Title</Title>
-                <Breadcrumbs>
+                {/* change back to 15px when we have breadcrumbs */}
+                <Title style={{ marginBottom: '0' }}>{title}</Title>
+                {/* <Breadcrumbs>
                     {items}
                 </Breadcrumbs> */}
             </Box>

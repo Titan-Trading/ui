@@ -1,9 +1,15 @@
-import Input from "./Input";
-import Select from "./Select";
+import AddableList from './AddableList';
+import Input from './Input';
+import Select from './Select';
 
 export interface IOption {
     label: string;
     value: string;
 }
 
-export { Input, Select };
+export interface IField {
+    id: string;
+    value: string;
+}
+
+export { AddableList, Input, Select };

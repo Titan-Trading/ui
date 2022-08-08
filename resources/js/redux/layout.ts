@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     showLoader: false,
     error: null,
-    success: null
+    success: null,
+    title: ''
 };
 
 const layoutSlice = createSlice({
@@ -21,9 +22,12 @@ const layoutSlice = createSlice({
         },
         setError: (slice, action) => {
             slice.error = action.payload;
+        },
+        setTitle: (slice, action) => {
+            slice.title = action.payload;
         }
     }
 });
 
-export const { showLoading, hideLoading, setSuccess, setError } = layoutSlice.actions;
+export const { showLoading, hideLoading, setSuccess, setError, setTitle } = layoutSlice.actions;
 export default layoutSlice.reducer;

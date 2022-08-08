@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { LoadingOverlay, Select, Group, Text, RadioGroup, Radio, Box } from '@mantine/core'
+import { LoadingOverlay, Select, Group, Text, Box } from '@mantine/core'
 import { Controller } from 'react-hook-form';
 
-import { Input } from 'Components/Forms';
+import { Input, Select as CustomSelect } from 'Components/Forms';
 import { getExchanges } from 'API/exchanges';
 
 interface IExchangeAccount {
     control: any;
     register: any;
     errors: any;
+    watch: any;
     formData?: any;
 }
 
@@ -17,11 +18,11 @@ interface IExchange {
     label: string;
 }
 
-const ConnectExchangeAccount = ({ register, errors, control }: IExchangeAccount) => {
+const ConnectExchangeAccount = ({ register, errors, control, watch }: IExchangeAccount) => {
     const [ exchanges, setExchanges ] = useState<IExchange[]>([]);
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ error, setError ] = useState<boolean>(false);
-    const [ showWalletKey, setShowWalletKey ] = useState<boolean>(false);
+    const watchConnOption = watch('connection_option'); 
 
     useEffect(() => {
         getExchanges().then(({ data }) => {
@@ -78,54 +79,42 @@ const ConnectExchangeAccount = ({ register, errors, control }: IExchangeAccount)
                                     />
                                 )}
                             />
-                            <Controller
+                            <CustomSelect
+                                label="Connection Option"
                                 name="connection_option"
                                 control={control}
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <RadioGroup
-                                        label="Connection Option"
-                                        size="sm"
-                                        onChange={onChange}
-                                        onBlur={onBlur}
-                                        value={value}
-                                        defaultValue="api"
-                                        sx={(theme) => ({
-                                            marginBottom: theme.spacing.lg
-                                        })}
-                                    >
-                                        <Radio value="api" onClick={() => setShowWalletKey(false)}>API Key/Secret</Radio>
-                                        <Radio value="wallet" onClick={() => setShowWalletKey(true)}>Wallet Private Key</Radio>
-                                    </RadioGroup>
-                                )}
+                                rules={{ required: true }}
+                                required
+                                error={errors.connection_option}
+                                options={[
+                                    { label: 'API Key/Secret', value: 'api' },
+                                    { label: 'Wallet Private Key', value: 'wallet' }
+                                ]}
                             />
-                            {showWalletKey ? (
-                                <Input
-                                    label="Wallet Key"
-                                    required
-                                    error={errors.wallet_private_key && 'Wallet Key is Required'}
-                                    {...register('wallet_private_key', { required: true })}
-                                />
-                            ) : (
-                                <>
+                            {watchConnOption && (
+                                watchConnOption === 'wallet' ? (
                                     <Input
-                                        label="API Key"
+                                        label="Wallet Key"
                                         required
-                                        error={errors.api_key && 'API Key is Required'}
-                                        {...register('api_key', { required: true })}
+                                        error={errors.wallet_private_key && 'Wallet Key is Required'}
+                                        {...register('wallet_private_key', { required: true })}
                                     />
-                                    <Input
-                                        label="API Key Secret"
-                                        required
-                                        error={errors.api_key_secret && 'API Key Secret is Required'}
-                                        {...register('api_key_secret', { required: true })}
-                                    />
-                                    <Input
-                                        label="API Key Passphrase"
-                                        required
-                                        error={errors.api_key_passphrase && 'API Key Passphrase is Required'}
-                                        {...register('api_key_passphrase', { required: true })}
-                                    />
-                                </>
+                                ) : (
+                                    <>
+                                        <Input
+                                            label="API Key"
+                                            required
+                                            error={errors.api_key && 'API Key is Required'}
+                                            {...register('api_key', { required: true })}
+                                        />
+                                        <Input
+                                            label="API Secret"
+                                            required
+                                            error={errors.api_key_secret && 'API Secret is Required'}
+                                            {...register('api_key_secret', { required: true })}
+                                        />
+                                    </>
+                                )
                             )}
                         </Box>
                     )}

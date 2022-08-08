@@ -16,7 +16,7 @@ interface ICEFormStepper {
 const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormStepper) => {
     const [ active, setActive ] = useState<number>(0);
     const [ error, setError ] = useState<boolean>(false);
-    const { register, handleSubmit, control, formState: { errors } } = useForm();
+    const { register, handleSubmit, control, watch, formState: { errors } } = useForm();
 
     const prevStep = () => {
         if (active === 0) {
@@ -56,6 +56,7 @@ const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormSteppe
                         control={control}
                         register={register} 
                         errors={errors} 
+                        watch={watch}
                     />
                 </Stepper.Step>
                 <Stepper.Step 

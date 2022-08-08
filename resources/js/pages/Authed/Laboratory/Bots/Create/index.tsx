@@ -22,7 +22,7 @@ const CreateBot = ({ bots, setBots }: ICreateBot) => {
         const payload = {
             name,
             algorithm_text,
-            parameter_options: JSON.stringify(parameters)
+            parameter_options: JSON.stringify(parameters?.map((p) => p.value))
         };
         setLoading(true);
             

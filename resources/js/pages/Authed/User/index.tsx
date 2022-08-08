@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SegmentedControl, Box } from '@mantine/core';
+import { useDispatch } from 'react-redux';
 
 import API from './API';
 import ExchangeAccounts from './ExchangeAccounts';
+import { setTitle } from 'Redux/layout';
 
 const UserSettings = () => {
+    const dispatch = useDispatch();
     const [ tab, setTab ] = useState<string>('1');
     const settingsPages = [
         <API key={0} />,
         <ExchangeAccounts key={1} />
     ];
+
+    useEffect(() => {
+        dispatch(setTitle('Settings'));
+    }, []);
 
     return (
         <>

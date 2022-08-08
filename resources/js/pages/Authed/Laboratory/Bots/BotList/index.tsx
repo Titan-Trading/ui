@@ -7,7 +7,6 @@ import { filter } from 'ramda';
 import List from 'Components/List';
 import { deleteBot } from 'API/bots';
 import { IBot } from '..';
-import { IParameter } from '../Bot';
 
 import './style.scss';
 
@@ -88,15 +87,11 @@ const BotList = ({ bots, setBots, loading }: IBotList) => {
                 </Code>
                 <h3>Parameters</h3>
                 <ul className="parameter-list">
+                    {console.log(bot)}
                     {bot.parameter_options && 
-                    JSON.parse(bot.parameter_options).map(({ name, value }: IParameter, i: number) => {
+                    JSON.parse(bot.parameter_options).map((p: string, i: number) => {
                         return (
-                            <li key={i}>
-                                <SimpleGrid cols={2}>
-                                    <span>Name: <strong>{name}</strong></span>
-                                    <span>Value: <strong>{value}</strong></span>
-                                </SimpleGrid>
-                            </li>
+                            <li key={i}>{p}</li>
                         )
                     })}
                 </ul>

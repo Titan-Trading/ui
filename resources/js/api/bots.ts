@@ -7,6 +7,12 @@ export const getBots = () => Request({
     url: '/trading/bots'
 });
 
+export const getBot = (id: number) => Request({
+    method: 'GET',
+    url: `/trading/bots/${id}`
+});
+
+
 export const createBot = (data: IFormData) => Request({
     method: 'POST',
     url: '/trading/bots',

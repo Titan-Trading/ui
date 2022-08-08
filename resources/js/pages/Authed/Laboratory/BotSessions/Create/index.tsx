@@ -4,7 +4,7 @@ import { useNotifications } from '@mantine/notifications';
 
 import BotSession, { IFormData } from '../BotSession';
 import { IBotSession } from '../';
-import { createBot } from 'API/bots';
+import { createBotSessions } from 'API/botSessions';
 
 interface ICreateBotSession {
     botSessions: IBotSession[];
@@ -18,7 +18,30 @@ const CreateBotSession = ({ botSessions, setBotSessions }: ICreateBotSession) =>
     const notifications = useNotifications();
     
     const submit = (data: IFormData) => {
-        
+        const payload = {
+            ...data,
+            parameters: JSON.stringify(data.parameters.map((p) => p.value))
+        };
+        setLoading(true);
+
+        createBotSessions(payload).then(({ data }) => {
+            setLoading(false);
+            setSuccess(true);
+            setBotSessions([ ...botSessions, data ]);
+            
+            notifications.showNotification({
+                title: 'Success!',
+                message: 'Successfully created bot session',
+            });
+        }).catch((err) => {
+            setLoading(false);
+            console.log(err)
+            notifications.showNotification({
+                title: 'Error!',
+                message: 'Failed to create bot session',
+                color: 'red'
+            });
+        })
     }
 
     return (

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useForm, useController } from 'react-hook-form';
-import { Modal, Button, LoadingOverlay, Group, Switch, InputWrapper } from '@mantine/core';
+import { useForm, useController, useFieldArray } from 'react-hook-form';
+import { Modal, Button, LoadingOverlay, Group, Switch, InputWrapper, SimpleGrid } from '@mantine/core';
 
 import { Input, Select, IOption } from 'Components/Forms';
 import { IBotSession } from '..';
-import { getBots } from 'API/bots';
-import { getConnectedExchanges } from 'API/connectedExchanges';
-
+import { getBots, getBot } from 'API/bots';
+import { getExchangeAccounts } from 'API/exchangeAccounts';
 
 interface IBotSessionForm {
     opened: boolean;
@@ -15,6 +14,15 @@ interface IBotSessionForm {
     loading: boolean;
     success: boolean;
     setSuccess: any;
+}
+
+export interface IFormData {
+    name?: string;
+    bot_id?: number;
+    connected_exchange_id?: number;
+    parameters?: string[] | string;
+    mode?: string;
+    active?: boolean;
 }
 
 const BotSession = ({
@@ -27,15 +35,15 @@ const BotSession = ({
 }: IBotSessionForm) => {
     const [ bots, setBots ] = useState<IOption[]>([]);
     const [ connectedExchanges, setConnectedExchanges ] = useState<IOption[]>([]);
-    const { register, handleSubmit, formState: { errors }, reset, control } = useForm<IBotSession>();
+    const { register, handleSubmit, formState: { errors }, reset, control, watch, setFocus } = useForm<IBotSession>();
     const { field } = useController({ name: 'active', control });
-
-    // connected_exchange_id: number;
-    // bot_id: number;
-    // name: string;
-    // parameters: any;
-    // mode: string;
-    // active: boolean;
+    const watchBot = watch('bot_id');
+    const { fields, append, replace, remove } = useFieldArray({ control, name: 'parameters' });
+    const modes: IOption[] = [ // TODO: replace with future query
+        { label: 'Backtesting', value: 'backtesting' },
+        { label: 'Paper Trading', value: 'paper' },
+        { label: 'Live Trading', value: 'live' }
+    ];
 
     const handleClose = () => {
         setOpened(false);
@@ -58,7 +66,7 @@ const BotSession = ({
     const getRelatedData = async () => {
         return await Promise.all([
             getBots(),
-            getConnectedExchanges()
+            getExchangeAccounts()
         ]).then((values) => {
             const botData = formatOptionArray(values[0].data);
             const exchangeData = formatOptionArray(values[1].data);
@@ -66,7 +74,7 @@ const BotSession = ({
             // @ts-ignore - it's being annoying about a prop in another file 🙄
             setBots(botData); 
             setConnectedExchanges(exchangeData);
-        }).catch((err) =>{
+        }).catch((err) => {
             console.log(err);
         });
     };
@@ -74,6 +82,25 @@ const BotSession = ({
     useEffect(() => {
         getRelatedData();
     }, []);
+
+    useEffect(() => {
+        if (watchBot) {
+            let id = 0;
+
+            // get rid of ts error
+            if (typeof watchBot === 'string') id = parseInt(watchBot); 
+
+            // replace all fields with an empty one and delete it (only way to clear them out)
+            replace({});
+            remove(0);
+
+            getBot(id).then(({ data }) => {
+                const params = JSON.parse(data.parameter_options);
+                params.forEach((p: string) => append({ value: '', param: p }));
+                setFocus('parameters.0.value');
+            }).catch((e) => console.log(e))
+        }
+    }, [ watchBot ]);
 
     return (
         <Modal
@@ -100,6 +127,21 @@ const BotSession = ({
                     control={control}
                     options={bots}
                 />
+                {fields.length > 0 && (
+                    <SimpleGrid cols={2}>
+                        {fields.map((field, i) => {
+                            return (
+                                <Input
+                                    required
+                                    key={i}
+                                    label={field.param}
+                                    error={errors.parameters && errors.parameters[i] && `${field.param} value is required`}
+                                    {...register(`parameters.${i}.value`, { required: true })}
+                                />
+                            )
+                        })}
+                    </SimpleGrid>
+                )}
                 <Select
                     required
                     label="Connected Exchange"
@@ -108,6 +150,15 @@ const BotSession = ({
                     rules={{ required: true }}
                     control={control}
                     options={connectedExchanges}
+                />
+                <Select
+                    required
+                    label="Mode"
+                    error={errors.mode && 'Mode is required'}
+                    name="mode"
+                    rules={{ required: true }}
+                    control={control}
+                    options={modes}
                 />
                 <InputWrapper label="Active">
                     {/* @ts-ignore */}
