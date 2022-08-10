@@ -9,7 +9,8 @@ const PATHS = {
     entry: path.resolve(__dirname, 'resources/js/app.js'),
     image: path.resolve(__dirname, 'resources/images'),
     scss: path.resolve(__dirname, 'resources/scss'),
-    dist: path.resolve(__dirname, 'dist')
+    dist: path.resolve(__dirname, 'dist'),
+    nodeModules: path.resolve(__dirname, 'node_modules')
 };
 
 module.exports = env => ({
@@ -19,7 +20,7 @@ module.exports = env => ({
         rules: [
             {
                 test: /\.(js|jsx|ts|tsx)$/,
-                exclude: [path.resolve(__dirname, 'node_modules')],
+                exclude: PATHS.nodeModules,
                 include: PATHS.app,
                 use: {
                     loader: 'babel-loader',
@@ -34,7 +35,7 @@ module.exports = env => ({
             },
             {
                 test: /\.css$/i,
-                include: PATHS.base,
+                include: [ PATHS.base, PATHS.nodeModules ],
                 use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
             {

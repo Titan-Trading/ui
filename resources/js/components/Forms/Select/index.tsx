@@ -2,16 +2,10 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 import { Select as MantineSelect, InputWrapper } from '@mantine/core';
 
-import { IOption } from '..';
+import { IFormRequirements, IOption } from '..';
 
-interface ISelect {
-    name: string;
-    label: string;
-    control: any;
-    rules: any;
+interface ISelect extends IFormRequirements {
     options: IOption[];
-    required?: boolean;
-    error: any;
 }
 
 const Select = ({ name, label, control, rules, options, required, error }: ISelect) => {

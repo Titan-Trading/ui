@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Modal, Button, LoadingOverlay, Group } from '@mantine/core';
 import { isEmpty } from 'ramda';
 
-import { Input, AddableList, IField } from 'Components/Forms';
+import { Editor, Input, AddableList, IField } from 'Components/Forms';
 
 interface IBot {
     opened: boolean;
@@ -33,7 +33,7 @@ const Bot = ({
 }: IBot) => {
     const [ initialLoad, setInitialLoad ] = useState<boolean>(true);
     const form = useForm<IFormData>();
-    const { register, handleSubmit, formState: { errors }, reset } = form;
+    const { register, handleSubmit, formState: { errors }, reset, control } = form;
 
     const handleClose = () => {
         setOpened(false);
@@ -62,12 +62,13 @@ const Bot = ({
                     error={errors.name && 'Name is required'}
                     {...register('name', {  required: true })}
                 />
-                <Input
+                <Editor
                     required
                     label="Algorithm"
-                    type="textarea"
+                    name="algorithm_text"
+                    control={control}
                     error={errors.algorithm_text && 'Algorithm is required'}
-                    {...register('algorithm_text', {  required: true })}
+                    rules={{ required: true }}
                 />
                 <AddableList
                     required
