@@ -1,77 +1,18 @@
 version: '3.5'
 services:
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - certbot-etc:/etc/letsencrypt
-  #     - certbot-var:/var/lib/letsencrypt
-  #     - app:/var/www/html
-  #   command: certonly --standalone --preferred-challenges http -d wss.simpletrader.com
-  ui-1:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    hostname: ui-1
-    container_name: ui-1
-    restart: unless-stopped
-    tty: true
-    env_file:
-      - .one.env
-    volumes:
-      - app:/var/www/html
-    command:
-      - yarn
-      - start
-  ui-2:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    hostname: ui-2
-    container_name: ui-2
-    restart: unless-stopped
-    tty: true
-    env_file:
-      - .two.env
-    volumes:
-      - app:/var/www/html
-    command:
-      - yarn
-      - start
   ui-proxy:
-    image: nginx:alpine
+    build:
+      context: ./
+      dockerfile: Dockerfile
     container_name: ui-proxy
+    hostname: ui-proxy
+    env_file:
+      - .env
     restart: unless-stopped
-    depends_on:
-      - ui-1
-      - ui-2
     ports:
-      - 80:80
-      - 443:443
-    tty: true
+      - 8082:8082
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/nginx/certs/:/etc/nginx/ssl
-      # - certbot-etc:/etc/letsencrypt
-      # - certbot-var:/var/lib/letsencrypt
-
-# secrets:
-  # ssl_cert:
-  #   file: ./nginx/certs/fullchain.pem
-  # ssl_key:
-  #   file: ./nginx/certs/privkey.pem
-  # ssl_dhparam:
-  #   file: ./nginx/certs/dhparam.pem
-
-volumes:
-  # certbot-etc:
-  # certbot-var:
-  app:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./
 
 networks:
   default:
