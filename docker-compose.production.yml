@@ -1,9 +1,7 @@
 version: '3.5'
 services:
   ui-proxy:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: registry.tradingsystemstest.com/st-ui
     container_name: ui-proxy
     hostname: ui-proxy
     restart: unless-stopped

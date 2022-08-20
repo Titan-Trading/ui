@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-require('dotenv').config();
+require('dotenv').config({path: 'production.env'});
 
 const PATHS = {
     app: path.resolve(__dirname, 'resources/js'),
