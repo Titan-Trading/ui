@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   ui-proxy:
-    image: registry.tradingsystemstest.com/st-ui
+    image: registry.ryanmcoble.com/simpletrader/ui:latest
     container_name: ui-proxy
     hostname: ui-proxy
     restart: unless-stopped
