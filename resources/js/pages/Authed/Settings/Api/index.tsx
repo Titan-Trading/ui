@@ -16,32 +16,27 @@ export interface IKey {
 
 const ApiKeys = () => {
     const { data, isLoading, error } = useGetApiKeys();
-    const [ keys, setKeys ] = useState<IKey[]>([]);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isLoading) setKeys(data?.data);
-    }, [ data ]);
     
     return (
         <>
             <Title order={2} style={{ margin: '25px 0' }}>API Keys</Title>
             <Button 
-                color="green" 
+                color="cyan" 
                 role="link" 
-                onClick={() => navigate(paths.authed.settings.apiKey.createApiKey)}
+                onClick={() => navigate(paths.authed.settings.apiKey.create)}
+                style={{ marginBottom: '25px' }}
             >
-                Create Api Key
+                Add Api Key
             </Button>
             {error ? (
                 <AlertDanger
                     message="Error: Unable to retrieve API Keys"
-                    styles={{ marginTop: '25px' }}
+                    style={{ marginTop: '25px' }}
                 />
             ) : (
                 <APIKeyList 
-                    keys={keys} 
-                    setKeys={setKeys} 
+                    keys={data?.data} 
                     loading={isLoading}
                 />
             )}

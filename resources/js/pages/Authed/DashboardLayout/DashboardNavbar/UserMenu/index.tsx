@@ -35,7 +35,7 @@ const UserMenu = ({ user }: IUserMenu) => {
         >
             <Menu.Item
                 icon={<BsGear />}
-                onClick={() => navigate(authed.settings.all)}
+                onClick={() => navigate(authed.settings.base)}
             >
                 Settings
             </Menu.Item>

@@ -4,7 +4,8 @@ const initialState = {
     showLoader: false,
     error: null,
     success: null,
-    title: ''
+    title: '',
+    breadcrumbs: []
 };
 
 const layoutSlice = createSlice({
@@ -25,9 +26,12 @@ const layoutSlice = createSlice({
         },
         setTitle: (slice, action) => {
             slice.title = action.payload;
+        },
+        setBreadcrumbs: (slice, action) => {
+            slice.breadcrumbs = action.payload;
         }
     }
 });
 
-export const { showLoading, hideLoading, setSuccess, setError, setTitle } = layoutSlice.actions;
+export const { showLoading, hideLoading, setSuccess, setError, setTitle, setBreadcrumbs } = layoutSlice.actions;
 export default layoutSlice.reducer;

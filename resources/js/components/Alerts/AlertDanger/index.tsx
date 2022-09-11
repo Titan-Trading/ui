@@ -4,12 +4,12 @@ import { HiXCircle } from 'react-icons/hi';
 
 interface IAlertDanger {
     message: string;
-    styles?: any;
+    style?: any;
 }
 
-const AlertDanger = ({ message, styles }: IAlertDanger) => {
+const AlertDanger = ({ message, style }: IAlertDanger) => {
     return (
-        <Alert style={styles} icon={<HiXCircle />} color="red">
+        <Alert style={style} icon={<HiXCircle />} color="red" variant="filled">
             {message}
         </Alert>
     )

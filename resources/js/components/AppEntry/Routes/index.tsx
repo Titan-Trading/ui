@@ -17,14 +17,14 @@ const Routes = () => {
     return (
         <Switch>
             {!isNil(user) ? (
-                <Route path="/" element={<DashboardLayout />}>
-                    {authedRoutes.map((props, i) => <Route key={i} {...props} />)}
+                <Route element={<DashboardLayout />}>
+                    {authedRoutes.map((props, i) => <Route index={i === 0} key={i} {...props} />)}
                     <Route path="*" element={<Navigate to={paths.authed.dashboard} />} />
                 </Route>
             ) : (
-                <Route path="/" element={<GuestLayout />}>
-                    {guestRoutes.map((props, i) => <Route key={i} {...props} />)}
-                    <Route path="/" element={<Navigate to={paths.guest.login} />} />
+                <Route element={<GuestLayout />}>
+                    {guestRoutes.map((props, i) => <Route index={i === 0} key={i} {...props} />)}
+                    <Route path="*" element={<Navigate to={paths.guest.login} />} />
                 </Route>
             )}
             {errorRoutes.map((props, i) => <Route key={i} {...props} />)}

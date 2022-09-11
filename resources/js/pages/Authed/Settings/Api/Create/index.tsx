@@ -15,7 +15,7 @@ const CreateAPIKey = () => {
 
     useEffect(() => {
         if (status === 'success') {
-            navigate(paths.authed.settings.all);
+            navigate(paths.authed.settings.base);
             notifications.showNotification({
                 title: 'Success!',
                 message: 'Successfully created API key',

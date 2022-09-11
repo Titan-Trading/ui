@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button, Card, LoadingOverlay, Text, Group } from '@mantine/core';
+import { Button, Card, Loader, Text, Group, Center } from '@mantine/core';
 import { isEmpty } from 'ramda';
+import { openConfirmModal } from '@mantine/modals';
 
 import './styles.scss';
 
 interface IList {
     loading: boolean;
     items: any[];
-    onEdit: any;
+    onEdit?: any;
     onView: any;
+    onDelete?: any;
     emptyMessage: any;
 }
 
@@ -17,33 +19,61 @@ const List = ({
     items,
     onEdit, 
     onView,
+    onDelete,
     emptyMessage
 }: IList) => {
+
+    const handleDelete = (id: number) => {
+        openConfirmModal({
+            title: 'Are you sure you want to delete this item?',
+            closeOnConfirm: true,
+            labels: { confirm: 'I\'m Sure', cancel: 'Nevermind' },
+            children: <Text size="sm">This action cannot be undone</Text>,
+            onConfirm: () => onDelete(id)
+        })
+    };
+
     return (
-        <Card style={{ padding: '22px 16px' }}>
-            <LoadingOverlay visible={loading} />
-            {isEmpty(items) && !loading ? (
-                <Text>{emptyMessage}</Text>
+        <div style={{ position: 'relative' }}>
+            {loading ? (
+                <Center>
+                    <Loader variant="bars" color="cyan" />
+                </Center>
             ) : (
-                <ul className="key-list">
-                    {items.map((i) => {
-                        return (
-                            <li key={i.id}>
-                                <Text className="name">{i.name}</Text>
-                                <Group>
-                                    <Button variant="light" color="green" onClick={() => onEdit(i.id)}>
-                                        Edit
-                                    </Button>
-                                    <Button variant="light" color="cyan" onClick={() => onView(i.id)}>
-                                        View
-                                    </Button>
-                                </Group>
-                            </li>
-                        );
-                    })}
-                </ul>
+                <Card style={{ padding: '22px 16px' }}>
+                    {isEmpty(items) && !loading ? (
+                        <Text>{emptyMessage}</Text>
+                    ) : (
+                        items && items.length > 0 && (
+                            <ul className="key-list">
+                                {items.map((i) => {
+                                    return (
+                                        <li key={i.id}>
+                                            <Text className="name">{i.name}</Text>
+                                            <Group>
+                                                <Button variant="light" color="cyan" onClick={() => onView(i.id)}>
+                                                    View
+                                                </Button>
+                                                {onEdit && (
+                                                    <Button variant="light" color="lime" onClick={() => onEdit(i.id)}>
+                                                        Edit
+                                                    </Button>
+                                                )}
+                                                {onDelete && (
+                                                    <Button variant="light" color="red" onClick={() => handleDelete(i.id)}>
+                                                        Delete
+                                                    </Button>
+                                                )}
+                                            </Group>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )
+                    )}
+                </Card> 
             )}
-        </Card>
+        </div>
     )
 };
 

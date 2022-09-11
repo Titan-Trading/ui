@@ -84,10 +84,10 @@ if(user) {
 }
 
 render(
-    <BrowserRouter>
-        <Provider store={store}>
+    <Provider store={store}>
+        <BrowserRouter>
             <AppEntry />
-        </Provider>
-    </BrowserRouter>,
+        </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
 );

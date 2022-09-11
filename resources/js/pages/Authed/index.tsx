@@ -1,5 +1,5 @@
 import Dashboard from './Dashboard';
 import Laboratory from './Laboratory';
-import UserSettings from './User';
+import Settings from './Settings';
 
-export { Dashboard, Laboratory, UserSettings };
+export { Dashboard, Laboratory, Settings };

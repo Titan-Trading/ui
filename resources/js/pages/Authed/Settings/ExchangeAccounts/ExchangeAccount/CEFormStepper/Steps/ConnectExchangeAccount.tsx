@@ -3,7 +3,6 @@ import { LoadingOverlay, Select, Group, Text, Box } from '@mantine/core'
 import { Controller } from 'react-hook-form';
 
 import { Input, Select as CustomSelect } from 'Components/Forms';
-import { getExchanges } from 'API/exchanges';
 
 interface IExchangeAccount {
     control: any;
@@ -24,22 +23,22 @@ const ConnectExchangeAccount = ({ register, errors, control, watch }: IExchangeA
     const [ error, setError ] = useState<boolean>(false);
     const watchConnOption = watch('connection_option'); 
 
-    useEffect(() => {
-        getExchanges().then(({ data }) => {
-            const temp = data.map((e: any) => {
-                return {
-                    value: { name: e.name, id: e.id },
-                    label: e.name
-                };
-            });
+    // useEffect(() => {
+    //     getExchanges().then(({ data }) => {
+    //         const temp = data.map((e: any) => {
+                // return {
+                //     value: { name: e.name, id: e.id },
+                //     label: e.name
+                // };
+    //         });
 
-            setExchanges(temp);
-            setLoading(false);
-        }).catch(() => {
-            setError(true);
-            setLoading(false);
-        });
-    }, []);
+    //         setExchanges(temp);
+    //         setLoading(false);
+    //     }).catch(() => {
+    //         setError(true);
+    //         setLoading(false);
+    //     });
+    // }, []);
 
     return (
         <>

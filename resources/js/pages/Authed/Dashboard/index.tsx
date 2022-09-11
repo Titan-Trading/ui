@@ -11,7 +11,7 @@ const Dashboard = () => {
         dispatch(setTitle('Dashboard'));
     }, []);
 
-    return <Title>Hi :)</Title>
+    return <></>
 };
 
 export default Dashboard;

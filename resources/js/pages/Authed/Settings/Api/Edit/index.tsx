@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
 import paths from 'Paths';
-import { useUpdateApiKey } from 'API/apiKeys';
+import { useGetApiKey, useUpdateApiKey } from 'API/apiKeys';
 import ApiKeyForm, { IFormData } from '../ApiKeyForm';
 
 const EditApiKey = () => {
@@ -27,7 +27,7 @@ const EditApiKey = () => {
     
     const submit = (data: IFormData) => console.log(data);
 
-    return <ApiKeyForm submit={submit} loading={isLoading} />
+    return <ApiKeyForm submit={submit} loading={isLoading} showDelete />
 };
 
 export default EditApiKey;

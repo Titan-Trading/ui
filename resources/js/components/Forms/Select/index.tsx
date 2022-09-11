@@ -22,6 +22,8 @@ const Select = ({ name, label, control, rules, options, required, error }: ISele
         >
             <MantineSelect
                 data={options}
+                searchable
+                nothingFound="No results found"
                 {...field}
             />
         </InputWrapper>

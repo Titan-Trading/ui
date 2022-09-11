@@ -1,6 +1,7 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import Routes from './Routes';
@@ -24,12 +25,14 @@ const AppEntry = () => {
                     spacing: { xs: 10, sm: 12, md: 16, lg: 20, xl: 24 },
                 }}
             >
-                <NotificationsProvider
-                    position="top-right" 
-                    zIndex={1985}
-                >
-                    <Routes />
-                </NotificationsProvider>
+                <ModalsProvider>
+                    <NotificationsProvider
+                        position="top-right" 
+                        zIndex={1985}
+                    >
+                        <Routes />
+                    </NotificationsProvider>
+                </ModalsProvider>
             </MantineProvider>
         </QueryClientProvider>
     );

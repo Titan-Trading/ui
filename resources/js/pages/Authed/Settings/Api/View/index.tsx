@@ -6,12 +6,10 @@ import paths from 'Paths';
 import { useGetApiKey } from 'API/apiKeys';
 
 const ViewApiKey = () => {
-    const params = useParams();
-    const { data, isLoading } = useGetApiKey(params.id)
+    const { id } =  useParams();
+    const { data, isLoading } = useGetApiKey(id ? parseInt(id) : 0, id !== undefined);
     const navigate = useNavigate();
     
-    console.log(data);
-
     return <></>
 };
 

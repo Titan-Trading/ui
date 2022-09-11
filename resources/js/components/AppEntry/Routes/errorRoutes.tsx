@@ -7,5 +7,4 @@ const { error } = paths;
 
 export default [
     { path: error.error404, element: <Error404 /> },
-    { path: '*', element: <Error404 /> },
 ];
