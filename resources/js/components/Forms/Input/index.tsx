@@ -1,6 +1,5 @@
 import React, { forwardRef } from 'react';
 import { 
-    InputWrapper, 
     Input as MantineInput, 
     PasswordInput, 
     Textarea 
@@ -28,7 +27,7 @@ const Input = forwardRef(({ label, type = 'text', error, required = false, ...re
     };
 
     return (
-        <InputWrapper
+        <MantineInput.Wrapper
             ref={ref}
             required={required}
             label={label}
@@ -38,7 +37,7 @@ const Input = forwardRef(({ label, type = 'text', error, required = false, ...re
             })}
         >
             {renderInput()}
-        </InputWrapper>
+        </MantineInput.Wrapper>
     )
 });
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, useController, useFieldArray } from 'react-hook-form';
-import { Modal, Button, LoadingOverlay, Group, Switch, InputWrapper, SimpleGrid } from '@mantine/core';
+import { Modal, Button, LoadingOverlay, Group, Switch, Input as MantineInput, SimpleGrid } from '@mantine/core';
 
 import { Input, Select, IOption } from 'Components/Forms';
 import { IBotSession } from '..';
@@ -160,10 +160,10 @@ const BotSession = ({
                     control={control}
                     options={modes}
                 />
-                <InputWrapper label="Active">
+                <MantineInput.Wrapper label="Active">
                     {/* @ts-ignore */}
                     <Switch {...field} />
-                </InputWrapper>
+                </MantineInput.Wrapper>
                 <Group position="right">
                     <Button color="gray" onClick={() => handleClose()}>Cancel</Button>
                     <Button type="submit">Create Bot Session</Button>

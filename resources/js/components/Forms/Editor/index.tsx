@@ -1,7 +1,7 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
 import CodeEditor from '@uiw/react-textarea-code-editor';
-import { InputWrapper } from '@mantine/core';
+import { Input } from '@mantine/core';
 
 import { IFormRequirements } from '../index';
 
@@ -11,7 +11,7 @@ const Editor = ({ name, label, control, required, rules, error }: IFormRequireme
     const { field } = useController({ control, name, rules });
     
     return (
-        <InputWrapper
+        <Input.Wrapper
             required={required}
             label={label}
             error={error}
@@ -29,7 +29,7 @@ const Editor = ({ name, label, control, required, rules, error }: IFormRequireme
                 }}
                 {...field}
             />
-        </InputWrapper>
+        </Input.Wrapper>
     )
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
-import { Select as MantineSelect, InputWrapper } from '@mantine/core';
+import { Select as MantineSelect, Input } from '@mantine/core';
 
 import { IFormRequirements, IOption } from '..';
 
@@ -12,7 +12,7 @@ const Select = ({ name, label, control, rules, options, required, error }: ISele
     const { field } = useController({ name, control, rules });
 
     return (
-        <InputWrapper
+        <Input.Wrapper
             required={required}
             label={label}
             error={error}
@@ -26,7 +26,7 @@ const Select = ({ name, label, control, rules, options, required, error }: ISele
                 nothingFound="No results found"
                 {...field}
             />
-        </InputWrapper>
+        </Input.Wrapper>
     )
 };
 
