@@ -2,11 +2,11 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import LogRocket from 'logrocket';
 import {io} from 'socket.io-client';
 import JsonParser from 'socket.io-json-parser';
+import { BrowserRouter } from 'react-router-dom';
 
 import rootReducer from './redux';
 import { showLoading, hideLoading, setError } from './redux/layout';
@@ -84,10 +84,10 @@ if(user) {
 }
 
 render(
-    <Provider store={store}>
-        <BrowserRouter>
+    <BrowserRouter>
+        <Provider store={store}>
             <AppEntry />
-        </BrowserRouter>
-    </Provider>,
+        </Provider>
+    </BrowserRouter>,
     document.getElementById('root')
 );

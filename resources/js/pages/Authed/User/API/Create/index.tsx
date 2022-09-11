@@ -1,51 +1,35 @@
-import React, { useState } from 'react';
-import { Button } from '@mantine/core';
+import React, { useEffect } from 'react';
 import { useNotifications } from '@mantine/notifications';
+import { useNavigate } from 'react-router-dom';
 
-import APIKey, { IFormData } from '../APIKeyForm';
-import { createAPIKey } from 'API/apiKeys';
+import ApiKeyForm, { IFormData } from '../ApiKeyForm';
+import { useCreateApiKey } from 'API/apiKeys';
+import paths from 'Paths';
 
 const CreateAPIKey = () => {
-    const [ opened, setOpened ] = useState<boolean>(false);
-    const [ loading, setLoading ] = useState<boolean>(false);
-    const [ success, setSuccess ] = useState<boolean>(false);
+    const { mutate: createApiKey, isLoading, status } = useCreateApiKey();
     const notifications = useNotifications();
+    const navigate = useNavigate();
     
-    const submit = (data: IFormData) => {
-        setLoading(true);
-        
-        createAPIKey(data).then(() => {
-            setLoading(false);
-            setSuccess(true);
-            
+    const submit = (data: IFormData) => createApiKey(data)
+
+    useEffect(() => {
+        if (status === 'success') {
+            navigate(paths.authed.settings.all);
             notifications.showNotification({
                 title: 'Success!',
                 message: 'Successfully created API key',
-            });
-        }).catch(() => {
-            setLoading(false);
-            
+            }); 
+        } else if (status === 'error') {
             notifications.showNotification({
                 title: 'Error!',
                 message: 'Failed to create API key',
                 color: 'red'
             });
-        });
-    }
+        }
+    }, [ status ]);
 
-    return (
-        <>
-            <Button onClick={() => setOpened(true)}>Create API Key</Button>
-            <APIKey 
-                opened={opened} 
-                setOpened={setOpened} 
-                loading={loading}
-                submit={submit}
-                success={success}
-                setSuccess={setSuccess}
-            />
-        </>
-    );
+    return <ApiKeyForm loading={isLoading} submit={submit} />
 };
 
 export default CreateAPIKey;

@@ -1,18 +1,20 @@
 const paths = {
     authed: {
-        dashboard: '/dashboard',
-        laboratory: '/laboratory',
+        dashboard: 'dashboard',
+        laboratory: 'laboratory',
         settings: {
-            all: '/settings',
+            all: 'settings',
             apiKey: {
-                createApiKey: '/settings/api-key',
-                editApiKey: '/settings/api-key/:id',
-                editApiKeyBuilder: (id: number) => `/settings/api-key/${id}`
+                createApiKey: 'api-key',
+                viewApiKey: 'api-key/:id',
+                viewApiKeyBuilder: (id: number) => `api-key/${id}`,
+                editApiKey: 'api-key/:id/edit',
+                editApiKeyBuilder: (id: number) => `api-key/${id}/edit`
             }
         }
     },
     guest: {
-        login: '/login'
+        login: 'login'
     },
     error: {
         error404: '/404'

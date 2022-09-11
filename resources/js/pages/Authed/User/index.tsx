@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { SegmentedControl, Box } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 
-import API from './API';
+import API from './Api';
 import ExchangeAccounts from './ExchangeAccounts';
 import { setTitle } from 'Redux/layout';
-import DashboardLayout from '../DashboardLayout/index';
 
 const UserSettings = () => {
     const dispatch = useDispatch();
@@ -20,7 +19,7 @@ const UserSettings = () => {
     }, []);
 
     return (
-        <DashboardLayout>
+        <>
             <SegmentedControl 
                 size="lg"
                 fullWidth
@@ -35,7 +34,7 @@ const UserSettings = () => {
             <Box styles={{ paddingTop: '75px' }}>
                 {settingsPages[parseInt(tab) - 1]}
             </Box>
-        </DashboardLayout>
+        </>
     );
 };
 

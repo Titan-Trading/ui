@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from '@mantine/core'; 
 import { useNavigate } from 'react-router-dom';
 
 import List from 'Components/List';
@@ -11,17 +12,20 @@ interface IAPIKeyList {
     loading: boolean;
 }
 
-const APIKeyList = ({ keys, loading }: IAPIKeyList) => {
+const ApiKeyList = ({ keys, loading }: IAPIKeyList) => {
     const navigate = useNavigate();
 
     return (
         <List 
             loading={loading}
             items={keys}
-            onView={(id: number) => navigate(PATHS.authed.settings.apiKey.editApiKeyBuilder(id))}
-            emptyMessage="Nothing here"
+            onEdit={(id: number) => navigate(paths.authed.settings.apiKey.editApiKeyBuilder(id))}
+            onView={(id: number) => navigate(paths.authed.settings.apiKey.viewApiKeyBuilder(id))}
+            emptyMessage={
+                <Text>No Api Keys found</Text>
+            }
         />
     )
 };
 
-export default APIKeyList;
+export default ApiKeyList;

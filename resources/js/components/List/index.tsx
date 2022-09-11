@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, LoadingOverlay, Text } from '@mantine/core';
+import { Button, Card, LoadingOverlay, Text, Group } from '@mantine/core';
 import { isEmpty } from 'ramda';
 
 import './styles.scss';
@@ -7,6 +7,7 @@ import './styles.scss';
 interface IList {
     loading: boolean;
     items: any[];
+    onEdit: any;
     onView: any;
     emptyMessage: any;
 }
@@ -14,6 +15,7 @@ interface IList {
 const List = ({
     loading,
     items,
+    onEdit, 
     onView,
     emptyMessage
 }: IList) => {
@@ -28,7 +30,14 @@ const List = ({
                         return (
                             <li key={i.id}>
                                 <Text className="name">{i.name}</Text>
-                                <Button onClick={() => onView(i.id)}>View</Button>
+                                <Group>
+                                    <Button variant="light" color="green" onClick={() => onEdit(i.id)}>
+                                        Edit
+                                    </Button>
+                                    <Button variant="light" color="cyan" onClick={() => onView(i.id)}>
+                                        View
+                                    </Button>
+                                </Group>
                             </li>
                         );
                     })}

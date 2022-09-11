@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
 
 import DashboardNavbar from './DashboardNavbar';
 
-interface IDashboardLayout {
-    children: any;
-}
-
-const DashboardLayout = ({ children }: IDashboardLayout) => {
+const DashboardLayout = () => {
     const user = useSelector((store: any) => store.user);
     const { title } = useSelector((store: any) => store.layout)
 
@@ -40,7 +37,7 @@ const DashboardLayout = ({ children }: IDashboardLayout) => {
                     {items}
                 </Breadcrumbs> */}
             </Box>
-            {children}
+            <Outlet />
         </AppShell>
     )
 };

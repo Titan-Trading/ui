@@ -1,6 +1,6 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import { Grid, Box, Title, Text, Space } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
 
 import Compass from 'Images/compass.jpg';
 

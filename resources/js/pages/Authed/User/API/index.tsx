@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Title } from '@mantine/core';
+import { Title, Button } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
-import APIKeyList from './APIKeyList';
-import CreateAPIKey from './Create';
+import APIKeyList from './ApiKeyList';
 import { AlertDanger } from 'Components/Alerts';
 
-import { getAPIKeys } from 'API/apiKeys';
+import { useGetApiKeys } from 'API/apiKeys';
+import paths from 'Paths';
 
 export interface IKey {
     id: number;
@@ -14,34 +15,35 @@ export interface IKey {
 }
 
 const APIKeys = () => {
+    const { data, isLoading, error } = useGetApiKeys();
     const [ keys, setKeys ] = useState<IKey[]>([]);
-    const [ loading, setLoading ] = useState<boolean>(true);
-    const [ error, setError ] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setError(false);
-
-        getAPIKeys().then(({ data }) => {
-            setKeys(data);
-            setLoading(false);
-        }).catch(() => {
-            setLoading(false);
-            setError(true);
-        });
-    }, []);
+        if (!isLoading) setKeys(data?.data);
+    }, [ data ]);
     
     return (
         <>
             <Title order={2} style={{ margin: '25px 0' }}>API Keys</Title>
-            <CreateAPIKey keys={keys} setKeys={setKeys} />
-
+            <Button 
+                color="green" 
+                role="link" 
+                onClick={() => navigate(paths.authed.settings.apiKey.createApiKey)}
+            >
+                Create Api Key
+            </Button>
             {error ? (
                 <AlertDanger
                     message="Error: Unable to retrieve API Keys"
                     styles={{ marginTop: '25px' }}
                 />
             ) : (
-                <APIKeyList keys={keys} setKeys={setKeys} loading={loading} />
+                <APIKeyList 
+                    keys={keys} 
+                    setKeys={setKeys} 
+                    loading={isLoading}
+                />
             )}
         </>
     );
