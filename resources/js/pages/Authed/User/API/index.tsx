@@ -14,7 +14,7 @@ export interface IKey {
     key: string;
 }
 
-const APIKeys = () => {
+const ApiKeys = () => {
     const { data, isLoading, error } = useGetApiKeys();
     const [ keys, setKeys ] = useState<IKey[]>([]);
     const navigate = useNavigate();
@@ -49,4 +49,4 @@ const APIKeys = () => {
     );
 };
 
-export default APIKeys;
+export default ApiKeys;
