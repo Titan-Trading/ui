@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import { Button } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 
-import APIKey, { IFormData } from '../APIKey';
-import { IKey } from '../';
+import APIKey, { IFormData } from '../APIKeyForm';
 import { createAPIKey } from 'API/apiKeys';
 
-interface ICreateAPIKey {
-    keys: IKey[];
-    setKeys: any;
-}
-
-const CreateAPIKey = ({ keys, setKeys }: ICreateAPIKey) => {
+const CreateAPIKey = () => {
     const [ opened, setOpened ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ success, setSuccess ] = useState<boolean>(false);
@@ -20,10 +14,9 @@ const CreateAPIKey = ({ keys, setKeys }: ICreateAPIKey) => {
     const submit = (data: IFormData) => {
         setLoading(true);
         
-        createAPIKey(data).then(({ data }) => {
+        createAPIKey(data).then(() => {
             setLoading(false);
             setSuccess(true);
-            setKeys([ ...keys, data ]);
             
             notifications.showNotification({
                 title: 'Success!',

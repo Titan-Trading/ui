@@ -1,16 +1,10 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-import { ModalsProvider } from '@mantine/modals';
-import { useSelector } from 'react-redux';
-import { useRoutes } from 'react-router-dom'
-import { isNil } from 'ramda';
 
-import routes from 'Paths';
+import Routes from './Routes';
 
 const AppEntry = () => {
-    const user = useSelector((store: any) => store.user);
-    const routing = useRoutes(routes(!isNil(user)));
 
     return (
         <MantineProvider
@@ -29,9 +23,7 @@ const AppEntry = () => {
                 position="top-right" 
                 zIndex={1985}
             >
-                <ModalsProvider>
-                    {routing}
-                </ModalsProvider>
+                <Routes />
             </NotificationsProvider>
         </MantineProvider>
     );

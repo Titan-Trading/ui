@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import Bots from './Bots';
 import BotSessions from './BotSessions';
 import { setTitle } from 'Redux/layout';
+import DashboardLayout from '../DashboardLayout';
 
 const Laboratory = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const Laboratory = () => {
     }, []);
 
     return (
-        <>
+        <DashboardLayout>
             <SegmentedControl 
                 size="lg"
                 fullWidth
@@ -34,7 +35,7 @@ const Laboratory = () => {
             <Box styles={{ paddingTop: '75px' }}>
                 {labPages[parseInt(tab) - 1]}
             </Box>
-        </>
+        </DashboardLayout>
     )
 };
 

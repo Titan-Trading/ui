@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { setUser } from 'Redux/user';
 import UserButton from './UserButton';
-import { PATHS } from 'Paths';
+import paths from 'Paths';
 
 interface IUserMenu {
     user: any;
@@ -16,7 +16,7 @@ interface IUserMenu {
 const UserMenu = ({ user }: IUserMenu) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { authed } = PATHS;
+    const { authed } = paths;
 
     const handleLogout = () => {
         dispatch(setUser({}));

@@ -5,7 +5,7 @@ import { isEmpty } from 'ramda';
 
 import { Input } from 'Components/Forms';
 
-interface IAPIKey {
+interface IAPIKeyForm {
     opened: boolean;
     setOpened: any;
     formData?: IFormData;
@@ -19,7 +19,7 @@ export interface IFormData {
     name?: string;
 }
 
-const APIKey = ({ 
+const APIKeyForm = ({
     opened, 
     setOpened, 
     formData = {}, 
@@ -27,7 +27,7 @@ const APIKey = ({
     loading, 
     success,
     setSuccess
-}: IAPIKey) => {
+}: IAPIKeyForm) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const handleClose = () => {
@@ -64,4 +64,4 @@ const APIKey = ({
     );
 };
 
-export default APIKey;
+export default APIKeyForm;

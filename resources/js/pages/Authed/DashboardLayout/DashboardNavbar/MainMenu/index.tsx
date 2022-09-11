@@ -4,11 +4,11 @@ import { FaDraftingCompass } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
 import MenuButton from 'Components/Buttons/MenuButton';
-import { PATHS } from 'Paths';
+import paths from 'Paths';
 
 const MainMenu = () => {
     const { pathname } = useLocation();
-    const { authed } = PATHS;
+    const { authed } = paths;
 
     return (
         <>

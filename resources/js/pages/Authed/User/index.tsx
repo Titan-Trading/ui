@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import API from './API';
 import ExchangeAccounts from './ExchangeAccounts';
 import { setTitle } from 'Redux/layout';
+import DashboardLayout from '../DashboardLayout/index';
 
 const UserSettings = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const UserSettings = () => {
     }, []);
 
     return (
-        <>
+        <DashboardLayout>
             <SegmentedControl 
                 size="lg"
                 fullWidth
@@ -34,7 +35,7 @@ const UserSettings = () => {
             <Box styles={{ paddingTop: '75px' }}>
                 {settingsPages[parseInt(tab) - 1]}
             </Box>
-        </>
+        </DashboardLayout>
     );
 };
 
