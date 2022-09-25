@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { Text } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
 
 import { IExchangeAccount } from '../index';
 import List from 'Components/List';
-import paths from 'Routes/index';
 import { useDeleteExchangeAccount } from 'API/exchangeAccounts';
 import { showNotification } from '@mantine/notifications';
 
@@ -18,7 +16,6 @@ const ExchangeAccountList = ({
     loading
 }: IExchangeAccountList) => {
     const { mutate: deleteExchangeAccount, isLoading, status } = useDeleteExchangeAccount();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (status === 'success') {
@@ -41,7 +38,6 @@ const ExchangeAccountList = ({
             loading={loading || isLoading}
             items={exchangeAccounts}
             onDelete={(id: number) => deleteExchangeAccount(id)}
-            onView={(id: number) => navigate(paths.authed.settings.exchangeAccounts.viewBuilder(id))}
             emptyMessage={
                 <Text>No exchange accounts found</Text>
             }

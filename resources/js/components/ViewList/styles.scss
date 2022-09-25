@@ -1,0 +1,16 @@
+@import 'Variables';
+
+.list {
+    list-style: none;
+    .field {
+        margin-bottom: 20px;
+    }
+    .code {
+        margin-top: 5px;
+        background: $charcoal;
+        color: $white;
+        width: 100%;
+        padding: 10px;
+        display: block;
+    }
+}

@@ -1,46 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { Title } from '@mantine/core';
+import React from 'react';
+import { Space, Title, Button } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
-import BotList from './BotList';
-import CreateBot from './Create';
+import BotList from './List';
 import { AlertDanger } from 'Components/Alerts';
-import { IFormData } from './Bot'
-
-import { getBots } from 'API/bots';
+import { IFormData } from './BotForm'
+import { useGetBots } from 'API/bots';
+import paths from 'Paths';
 
 export interface IBot extends IFormData {
     id: number;
 }
 
 const Bots = () => {
-    const [ bots, setBots ] = useState<IBot[]>([]);
-    const [ loading, setLoading ] = useState<boolean>(true);
-    const [ error, setError ] = useState<boolean>(false);
-
-    useEffect(() => {
-        setError(false);
-
-        getBots().then(({ data }) => {
-            setBots(data);
-            setLoading(false);
-        }).catch(() => {
-            setLoading(false);
-            setError(true);
-        });
-    }, []);
+    const { data, isLoading, error } = useGetBots();
+    const navigate = useNavigate();
     
     return (
         <>
             <Title order={2} style={{ margin: '25px 0' }}>Bots</Title>
-            <CreateBot bots={bots} setBots={setBots} />
-
+            <Button 
+                color="cyan" 
+                role="link" 
+                onClick={() => navigate(paths.authed.laboratory.bots.create)}
+            >
+                Add Bot
+            </Button>
+            <Space h="xl" />
             {error ? (
-                <AlertDanger
-                    message="Error: Unable to retrieve bots"
-                    styles={{ marginTop: '25px' }}
-                />
+                <AlertDanger message="Error: Unable to retrieve bots" />
             ) : (
-                <BotList bots={bots} setBots={setBots} loading={loading} />
+                <BotList bots={data?.data} loading={isLoading} />
             )}
         </>
     );

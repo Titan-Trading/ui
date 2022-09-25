@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@mantine/core';
-import { useNotifications } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 
 import BotSession, { IFormData } from '../BotSession';
 import { IBotSession } from '../';
@@ -15,7 +15,6 @@ const CreateBotSession = ({ botSessions, setBotSessions }: ICreateBotSession) =>
     const [ opened, setOpened ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ success, setSuccess ] = useState<boolean>(false);
-    const notifications = useNotifications();
     
     const submit = (data: IFormData) => {
         const payload = {
@@ -29,14 +28,14 @@ const CreateBotSession = ({ botSessions, setBotSessions }: ICreateBotSession) =>
             setSuccess(true);
             setBotSessions([ ...botSessions, data ]);
             
-            notifications.showNotification({
+            showNotification({
                 title: 'Success!',
                 message: 'Successfully created bot session',
             });
         }).catch((err) => {
             setLoading(false);
             console.log(err)
-            notifications.showNotification({
+            showNotification({
                 title: 'Error!',
                 message: 'Failed to create bot session',
                 color: 'red'

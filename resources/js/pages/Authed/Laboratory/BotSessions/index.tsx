@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Title, } from '@mantine/core';
+import { Title, Space } from '@mantine/core';
 
 import { AlertDanger } from 'Components/Alerts';
 import BotSessionList from './BotSessionList'
@@ -38,12 +38,10 @@ const BotSessions = () => {
         <>
             <Title order={2} style={{ margin: '25px 0' }}>Bot Sessions</Title>
             <CreateBotSession botSessions={botSessions} setBotSessions={setBotSessions} />
+            <Space h="xl" />
 
             {error ? (
-                <AlertDanger
-                    message="Error: Unable to retrieve bot sessions"
-                    styles={{ marginTop: '25px' }}
-                />
+                <AlertDanger message="Error: Unable to retrieve bot sessions" />
             ) : (
                 <BotSessionList 
                     botSessions={botSessions} 

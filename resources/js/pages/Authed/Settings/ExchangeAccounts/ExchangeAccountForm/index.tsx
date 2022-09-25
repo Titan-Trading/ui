@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Grid, Button, LoadingOverlay } from '@mantine/core';
+import { isEmpty } from 'ramda';
 
 import { useGetExchanges } from 'API/exchanges';
 import { Select, Input } from 'Components/Forms';
@@ -100,7 +101,9 @@ const ExchangeAccountForm = ({ formData = {}, submit, loading, error }: IExchang
                                     </>
                                 )
                             )}
-                            <Button type="submit" color="cyan">Add Exchange Account</Button>
+                            <Button type="submit" color="cyan">
+                                {isEmpty(formData) ? 'Add Exchange Account' : 'Update Exchange Account'}
+                            </Button>
                         </form>
                     </Grid.Col>
                 </>

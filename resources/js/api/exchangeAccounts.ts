@@ -3,8 +3,9 @@ import { useMutation, useQuery } from 'react-query';
 import { queryClient } from 'Components/AppEntry';
 import Request from './requests';
 
-import { IFormData } from 'Routes/Authed/Settings/ExchangeAccounts/ExchangeAccount';
+import { IFormData } from 'Routes/Authed/Settings/ExchangeAccounts/ExchangeAccountForm';
 import { IExchangeAccount } from 'Routes/Authed/Settings/ExchangeAccounts';
+
 const API_URL = process.env.API_URL;
 
 export const getExchangeAccounts = () => Request({
@@ -39,10 +40,6 @@ export const useGetExchangeAccounts = (setAccounts: any) => {
             setAccounts(temp);
         }
     });
-};
-
-export const useGetExchangeAccount = (id: number, enabled: boolean) => {
-    return useQuery([ 'api-key', id ], () => getApiKey(id), { enabled });
 };
 
 export const useCreateExchangeAccount = () => useMutation(createExchangeAccount);

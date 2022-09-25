@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Title, Button } from '@mantine/core';
+import React from 'react';
+import { Title, Button, Space } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import APIKeyList from './ApiKeyList';
+import APIKeyList from './List';
 import { AlertDanger } from 'Components/Alerts';
 
 import { useGetApiKeys } from 'API/apiKeys';
@@ -25,15 +25,12 @@ const ApiKeys = () => {
                 color="cyan" 
                 role="link" 
                 onClick={() => navigate(paths.authed.settings.apiKey.create)}
-                style={{ marginBottom: '25px' }}
             >
                 Add Api Key
             </Button>
+            <Space h="xl" />
             {error ? (
-                <AlertDanger
-                    message="Error: Unable to retrieve API Keys"
-                    style={{ marginTop: '25px' }}
-                />
+                <AlertDanger message="Error: Unable to retrieve API Keys" />
             ) : (
                 <APIKeyList 
                     keys={data?.data} 

@@ -2,30 +2,13 @@ import { useMutation, useQuery } from 'react-query';
 
 import { queryClient } from 'Components/AppEntry';
 import Request from './requests';
-
 import { IFormData } from 'Routes/Authed/Settings/Api/ApiKeyForm';
-
-interface IUpdate {
-    id: number;
-    data: IFormData;
-}
 
 const API_URL = process.env.API_URL;
 
 const getApiKeys = () => Request({
     method: 'GET',
     url: `${API_URL}/api-keys`
-});
-
-const getApiKey = (id: number) => Request({
-    method: 'GET',
-    url: `${API_URL}/api-keys/${id}`
-});
-
-export const updateApiKey = ({ id, data }: IUpdate) => Request({
-    method: 'PUT',
-    url: `${API_URL}/api-keys/${id}`,
-    data
 });
 
 export const createApiKey = (data: IFormData) => Request({
@@ -40,18 +23,6 @@ export const deleteApiKey = (id: number) => Request({
 });
 
 export const useGetApiKeys = () => useQuery([ 'api-keys' ], getApiKeys);
-
-export const useGetApiKey = (id: number, enabled: boolean) => {
-    return useQuery([ 'api-key', id ], () => getApiKey(id), { enabled });
-};
-
-export const useUpdateApiKey = () => {
-    return useMutation(updateApiKey, {
-        onSuccess: () => {
-            queryClient.invalidateQueries([ 'api-keys' ]);
-        }
-    });
-};
 
 export const useCreateApiKey = () => useMutation(createApiKey);
 

@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import { showNotification } from '@mantine/notifications';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import BotForm, { IFormData } from '../BotForm';
-import { useCreateBot } from 'API/bots';
 import paths from 'Paths';
+import { useGetBot, useUpdateBot } from 'API/bots';
+import BotForm, { IFormData } from '../BotForm';
 
-const CreateBot = () => {
-    const { mutate: createBot, isLoading, status } = useCreateBot();
+const EditBot = () => {
+    const params = useParams();
+    const { mutate: updateBot, isLoading, status } = useUpdateBot();
+    const { data, isLoading: getLoading, error } = useGetBot(params.id);
     const navigate = useNavigate();
     
     const submit = (data: IFormData) => {
@@ -18,7 +20,7 @@ const CreateBot = () => {
             parameter_options: JSON.stringify(parameters?.map((p) => p.value))
         };
 
-        createBot(payload);
+        updateBot({ id: params.id, data: payload });
     };
 
     useEffect(() => {
@@ -26,18 +28,18 @@ const CreateBot = () => {
             navigate(paths.authed.laboratory.base);
             showNotification({
                 title: 'Success!',
-                message: 'Successfully created bot',
+                message: 'Successfully update bot',
             }); 
-        } else if (status === 'error') {
+        } else if (status === 'error' || error) {
             showNotification({
                 title: 'Error!',
-                message: 'Failed to create bot',
+                message: 'Failed to update bot',
                 color: 'red'
             });
         }
-    }, [ status ]);
+    }, [ status, error ]);
 
-    return <BotForm submit={submit} loading={isLoading} />
+    return <BotForm submit={submit} loading={getLoading || isLoading} formData={data?.data} />
 };
 
-export default CreateBot;
+export default EditBot;

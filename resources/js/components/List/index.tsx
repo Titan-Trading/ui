@@ -9,7 +9,7 @@ interface IList {
     loading: boolean;
     items: any[];
     onEdit?: any;
-    onView: any;
+    onView?: any;
     onDelete?: any;
     emptyMessage: any;
 }
@@ -29,6 +29,8 @@ const List = ({
             closeOnConfirm: true,
             labels: { confirm: 'I\'m Sure', cancel: 'Nevermind' },
             children: <Text size="sm">This action cannot be undone</Text>,
+            cancelProps: { color: 'cyan', variant: 'subtle' },
+            confirmProps: { color: 'red' },
             onConfirm: () => onDelete(id)
         })
     };
@@ -51,9 +53,11 @@ const List = ({
                                         <li key={i.id}>
                                             <Text className="name">{i.name}</Text>
                                             <Group>
-                                                <Button variant="light" color="cyan" onClick={() => onView(i.id)}>
-                                                    View
-                                                </Button>
+                                                {onView && (
+                                                    <Button variant="light" color="cyan" onClick={() => onView(i.id)}>
+                                                        View
+                                                    </Button>
+                                                )}
                                                 {onEdit && (
                                                     <Button variant="light" color="lime" onClick={() => onEdit(i.id)}>
                                                         Edit

@@ -67,6 +67,7 @@ module.exports = env => ({
     output: {
         path: PATHS.dist,
         filename: 'app.js',
+        publicPath: '/'
     },
     plugins: [
         require('autoprefixer'),

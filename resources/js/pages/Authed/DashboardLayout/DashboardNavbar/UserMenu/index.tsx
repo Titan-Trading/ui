@@ -9,6 +9,8 @@ import { setUser } from 'Redux/user';
 import UserButton from './UserButton';
 import paths from 'Paths';
 
+import './styles.scss';
+
 interface IUserMenu {
     user: any;
 }
@@ -26,26 +28,22 @@ const UserMenu = ({ user }: IUserMenu) => {
         <Menu
             withArrow
             position="right"
-            placement="end"
-            control={<UserButton user={user} />}
-            sx={(theme) => ({
-                width: '100%',
-                marginTop: theme.spacing.xl
-            })}
+            width={200}
+            className="user-menu"
+            offset={25}
         >
-            <Menu.Item
-                icon={<BsGear />}
-                onClick={() => navigate(authed.settings.base)}
-            >
-                Settings
-            </Menu.Item>
-
-            <Menu.Item
-                icon={<AiOutlineLogout />}
-                onClick={() => handleLogout()}
-            >
-                Logout
-            </Menu.Item>
+            <Menu.Target>
+                <UserButton user={user} />
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Item icon={<BsGear />} onClick={() => navigate(authed.settings.base)}>
+                    Settings
+                </Menu.Item>
+                <Menu.Item icon={<AiOutlineLogout />} onClick={() => handleLogout()}>
+                    Logout
+                </Menu.Item>
+            </Menu.Dropdown>
+            
         </Menu>
     );
 };

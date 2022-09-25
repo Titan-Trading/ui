@@ -62,7 +62,8 @@ module.exports = env => ({
     output: {
         path: PATHS.dist,
         filename: '[name].bundle.js',
-        clean: true
+        clean: true,
+        publicPath: '/'
     },
     plugins: [
         require('autoprefixer'),

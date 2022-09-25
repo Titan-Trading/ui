@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Group, Grid } from '@mantine/core';
 import { LoadingOverlay } from '@mantine/core';
+import { isEmpty } from 'ramda';
 
 import { Input } from 'Components/Forms';
 
@@ -34,7 +35,7 @@ const ApiKeyForm = ({
                         data-autofocus
                         {...register('name', {  required: true })}
                     />
-                    <Button type="submit" color="cyan">Add API Key</Button>
+                    <Button type="submit" color="cyan">{isEmpty(formData) ? 'Add API Key' : 'Update API Key'}</Button>
                 </form>
             </Grid.Col>
         </Grid>

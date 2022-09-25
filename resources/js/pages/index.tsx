@@ -4,16 +4,14 @@ const paths = {
         laboratory: {
             base: '/laboratory',
             bots: {
-                base: '/laboratory/bots',
-                create: '/laboratory/bots',
+                create: '/laboratory/bots/create',
                 view: '/laboratory/bots/:id',
                 viewBuilder: (id: number) => `/laboratory/bots/${id}`,
                 edit: '/laboratory/bots/:id/edit',
                 editBuilder: (id: number) => `/laboratory/bots/${id}/edit`
             },
             botSessions: {
-                base: '/laboratory/bot-sessions',
-                create: '/laboratory/bot-sessions',
+                create: '/laboratory/bot-sessions/create',
                 view: '/laboratory/bot-sessions/:id',
                 viewBuilder: (id: number) => `/laboratory/bot-sessions/${id}`,
                 edit: '/laboratory/bot-sessions/:id/edit',
@@ -23,18 +21,10 @@ const paths = {
         settings: {
             base: '/settings',
             apiKey: {
-                create: '/settings/api-key',
-                view: '/settings/api-key/:id',
-                viewBuilder: (id: number) => `/settings/api-key/${id}`,
-                edit: '/settings/api-key/:id/edit',
-                editBuilder: (id: number) => `/settings/api-key/${id}/edit`
+                create: '/settings/api-key/create',
             },
             exchangeAccounts: {
-                create: '/settings/exchange-accounts',
-                view: '/settings/exchange-accounts/:id',
-                viewBuilder: (id: number) => `/settings/exchange-accounts/${id}`,
-                edit: '/settings/exchange-accounts/:id/edit',
-                editBuilder: (id: number) => `/settings/exchange-accounts/${id}/edit`
+                create: '/settings/exchange-accounts/create',
             }
         }
     },

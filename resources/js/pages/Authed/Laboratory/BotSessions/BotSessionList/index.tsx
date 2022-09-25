@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, LoadingOverlay, Text, Code, SimpleGrid, Group } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { useNotifications } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 import { filter } from 'ramda';
 
 import List from 'Components/List';
@@ -18,7 +18,6 @@ interface IBotSessionList {
 
 const BotSessionList = ({ botSessions, setBotSessions, loading }: IBotSessionList) => {
     const modals = useModals();
-    const notifications = useNotifications();
 
     const deleteModalSettings = {
         title: 'Are you sure?',
@@ -51,13 +50,13 @@ const BotSessionList = ({ botSessions, setBotSessions, loading }: IBotSessionLis
             deleteBot(botSession.id).then(() => {
                 setBotSessions(filter(b => b.id !== botSession.id, botSessions));
                 modals.closeAll();
-                notifications.showNotification({
+                showNotification({
                     title: 'Success!',
                     message: 'Successfully deleted bot session',
                 });
             }).catch(() => {
                 modals.closeAll();
-                notifications.showNotification({
+                showNotification({
                     title: 'Error!',
                     message: 'Failed to delete bot session',
                     color: 'red'

@@ -19,7 +19,7 @@ const Routes = () => {
             {!isNil(user) ? (
                 <Route element={<DashboardLayout />}>
                     {authedRoutes.map((props, i) => <Route index={i === 0} key={i} {...props} />)}
-                    <Route path="*" element={<Navigate to={paths.authed.dashboard} />} />
+                    {/* <Route path="*" element={<Navigate to={paths.authed.dashboard} />} /> */}
                 </Route>
             ) : (
                 <Route element={<GuestLayout />}>

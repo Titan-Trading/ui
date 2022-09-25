@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Title, Alert, Button } from '@mantine/core';
-import { HiXCircle } from 'react-icons/hi';
+import { Title, Button, Space } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import CreateExchangeAccount from './Create';
-import ExchangeAccountList from './ExchangeAccountList';
+import ExchangeAccountList from './List';
 import { useGetExchangeAccounts } from 'API/exchangeAccounts';
 import paths from 'Routes/index';
 import { AlertDanger } from 'Components/Alerts';
@@ -36,13 +34,13 @@ const ExchangeAccounts = () => {
                 color="cyan" 
                 role="link" 
                 onClick={() => navigate(paths.authed.settings.exchangeAccounts.create)}
-                style={{ marginBottom: '25px' }}
             >
                 Add Exchange Account
             </Button>
+            <Space h="xl" />
 
             {error ? (
-                <AlertDanger style={{ marginTop: '25px' }} message="Error: Unable to retrieve exchange accounts" />
+                <AlertDanger message="Error: Unable to retrieve exchange accounts" />
             ) : (
                 <ExchangeAccountList exchangeAccounts={accounts} loading={isLoading} />
             )}
