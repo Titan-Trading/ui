@@ -1,7 +1,9 @@
 version: '3.5'
 services:
   ui-proxy:
-    image: registry.ryanmcoble.com/simpletrader/ui:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
     container_name: ui-proxy
     hostname: ui-proxy
     restart: unless-stopped
