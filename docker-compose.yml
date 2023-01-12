@@ -3,7 +3,7 @@ services:
   ui-proxy:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: local.Dockerfile
     container_name: ui-proxy
     hostname: ui-proxy
     restart: unless-stopped
