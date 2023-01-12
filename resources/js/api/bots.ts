@@ -1,6 +1,6 @@
 import Request from './requests';
 
-import { IFormData } from 'Routes/Authed/Laboratory/Bots/Bot';
+import { IBot } from '../models/Bot';
 
 export const getBots = () => Request({
     method: 'GET',
@@ -13,13 +13,12 @@ export const getBot = (id: number) => Request({
 });
 
 
-export const createBot = (data: IFormData) => Request({
+export const createBot = () => Request({
     method: 'POST',
-    url: '/trading/bots',
-    data: data
+    url: '/trading/bots'
 });
 
-export const updateBot = (id: number, data: IFormData) => Request({
+export const updateBot = (id: number, data: IBot) => Request({
     method: 'PUT',
     url: `/trading/bots/${id}`,
     data: data

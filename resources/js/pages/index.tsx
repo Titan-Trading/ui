@@ -1,18 +1,22 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-
 import { 
     DashboardLayout,
     Dashboard,
-    Laboratory,
+    Lab,
+    Projects,
+    ProjectBuilder,
+    BacktestSetup,
+    Indicators,
+    IndicatorBuilder,
+    IndicatorTestSetup,
+    IndicatorTest,
+    Session,
     UserSettings
 } from './Authed';
-
 import {
     GuestLayout,
     Login
 } from './Guest';
-
 import {
     Error404
 } from './Error';
@@ -20,52 +24,101 @@ import {
 const PATHS = {
     authed: {
         dashboard: '/',
-        laboratory: '/laboratory',
-        settings: '/settings' //TODO change to /userId/settings
+
+        // lab routes
+        lab: '/lab',
+
+        // strategies
+        projects: '/projects',
+        projectBuilder: '/projects/:projectId',
+        backtestSetup: '/projects/:projectId/backtest-setup',
+        session: '/projects/:projectId/backtests/:sessionId',
+
+        // indicators
+        indicators: '/indicators',
+        indicatorBuilder: '/indicators/:indicatorId',
+        indicatorTestSetup: '/indicators/:indicatorId/test-setup',
+        indicatorTest: '/indicators/:indicatorId/tests/:testId',
+
+        // learning boot camp routes
+        boot_camp: '/learning',
+
+        settings: '/settings'
     },
     guest: {
+        home: '/',
         login: '/login'
-    },
-    error: {
-        error404: '/404'
     }
 };
 
-const { authed, guest, error } = PATHS;
+const { authed, guest } = PATHS;
 
 const routes = (isAuthed: boolean) => [
     {
         path: '/',
-        element: isAuthed ? <DashboardLayout /> : <Navigate to={guest.login} />,
-        children: [
+        element: isAuthed ? <DashboardLayout /> : <GuestLayout />,
+        children: isAuthed ? [
             {
                 path: authed.dashboard,
                 element: <Dashboard />
             },
             {
-                path: authed.laboratory,
-                element: <Laboratory />,
+                path: authed.lab,
+                element: <Lab />,
+            },
+            {
+                path: authed.projects,
+                element: <Projects />
+            },
+            {
+                path: authed.projectBuilder,
+                element: <ProjectBuilder />
+            },
+            {
+                path: authed.backtestSetup,
+                element: <BacktestSetup />
+            },
+            {
+                path: authed.session,
+                element: <Session />
+            },
+            {
+                path: authed.indicators,
+                element: <Indicators />
+            },
+            {
+                path: authed.indicatorBuilder,
+                element: <IndicatorBuilder />
+            },
+            {
+                path: authed.indicatorTestSetup,
+                element: <IndicatorTestSetup />
+            },
+            {
+                path: authed.indicatorTest,
+                element: <IndicatorTest />
             },
             {
                 path: authed.settings,
                 element: <UserSettings />,
+            },
+            {
+                path: '*',
+                element: <Error404 />
+            }
+        ] : [
+            {
+                path: guest.login,
+                element: <Login />
+            },
+            {
+                path: '*',
+                element: <Error404 />
             }
         ]
     },
     {
-        path: '/',
-        element: !isAuthed ? <GuestLayout /> : <Navigate to={authed.dashboard} />,
-        children: [
-            { path: 'login', element: <Login /> },
-            { path: '/', element: <Navigate to={guest.login} /> },
-        ],
-    },
-    {
         path: '*',
-        element: <Error404 />
-    },
-    {
-        path: error.error404,
         element: <Error404 />
     }
 ];

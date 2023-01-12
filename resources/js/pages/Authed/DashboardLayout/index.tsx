@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
-import { AppShell, Box, Title, Breadcrumbs, Anchor } from '@mantine/core';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { AppShell, Box, Title, Breadcrumbs, Anchor, Loader, Center } from '@mantine/core';
+import { PATHS } from 'Routes/index';
 
-import DashboardNavbar from './DashboardNavbar';
+import Navbar from './Navbar';
 
 const DashboardLayout = () => {
-    const user = useSelector((store: any) => store.user);
-    const { title } = useSelector((store: any) => store.layout)
+    const userStore = useSelector((store: any) => store.user);
+    const { title, showLoader } = useSelector((store: any) => store.layout);
+	const { guest, authed } = PATHS;
+	const navigate = useNavigate();
 
     const items = [
         { title: 'Mantine', href: 'https://mantine.dev' },
@@ -19,25 +22,19 @@ const DashboardLayout = () => {
         </Anchor>
       ));
 
+    useEffect(() => {
+		if(!userStore) {
+            navigate(guest.login);
+            return;
+        }
+    }, []);
+
     return (
         <AppShell
             padding="xl"
-            navbar={<DashboardNavbar user={user} />}
+            navbar={<Navbar />}
         >
-            <Box
-                sx={(theme) => ({
-                    backgroundColor: theme.colors.gray[0],
-                    padding: theme.spacing.md,
-                    marginBottom: '50px'
-                })}
-            >
-                {/* change back to 15px when we have breadcrumbs */}
-                <Title style={{ marginBottom: '0' }}>{title}</Title>
-                {/* <Breadcrumbs>
-                    {items}
-                </Breadcrumbs> */}
-            </Box>
-            <Outlet />
+			{showLoader ? <Center><Loader size="xl" variant="bars" /></Center> : <Outlet />}
         </AppShell>
     )
 };

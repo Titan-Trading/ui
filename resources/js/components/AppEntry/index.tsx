@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
-import { useSelector } from 'react-redux';
-import { useRoutes } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
+import { setUser } from 'Redux/user';
 import { isNil } from 'ramda';
-
+import { PATHS } from 'Paths';
 import routes from 'Paths';
 
 const AppEntry = () => {
-    const user = useSelector((store: any) => store.user);
-    const routing = useRoutes(routes(!isNil(user)));
+    const userStore = useSelector((store: any) => store.user);
+    const { guest, authed } = PATHS;
+    const routing = useRoutes(routes(!isNil(userStore)));
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // useEffect(() => {
+        // auto logout (on reload)
+        // const currentTime = Math.floor((new Date()).getTime() / 1000);
+        // if(userStore && userStore.user && userStore.user.metadata && currentTime > userStore.user.metadata.exp) {
+        //     dispatch(setUser({}));
+        //     navigate(guest.login);
+        //     return;
+        // }
+    // }, []);
 
     return (
         <MantineProvider

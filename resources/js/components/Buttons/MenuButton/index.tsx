@@ -24,9 +24,9 @@ const CustomButton = ({ active = false, text, icon }: ICustomButton) => {
         >
             <Group>
                 {icon} 
-                <Text>
+                {text ?? <Text>
                     {text}
-                </Text>
+                </Text>}
             </Group>
             
         </UnstyledButton>

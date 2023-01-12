@@ -1,15 +1,20 @@
 import Request from './requests';
 
 const API_URL = process.env.API_URL;
-import { IFormData } from 'Routes/Authed/Laboratory/BotSessions/BotSession';
+import IBotSession from '../models/BotSession';
 
-export const getBotSessions = () => Request({
+export const getBotSessions = (projectId: string) => Request({
     method: 'GET',
-    url: `${API_URL}/trading/bots/sessions`
+    url: `${API_URL}/trading/bots/${projectId}/sessions`
 });
 
-export const createBotSessions = (data: IFormData) => Request({
+export const getBotSession = (projectId: string, sessionId: string) => Request({
+    method: 'GET',
+    url: `${API_URL}/trading/bots/${projectId}/sessions/${sessionId}`
+});
+
+export const createBotSession = (data: IBotSession) => Request({
     method: 'POST',
-    url: `${API_URL}/trading/bots/sessions`,
+    url: `${API_URL}/trading/bots/${data.bot_id}/sessions`,
     data: data
 });

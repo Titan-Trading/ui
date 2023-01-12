@@ -66,7 +66,8 @@ module.exports = env => ({
     },
     output: {
         path: PATHS.dist,
-        filename: 'app.js',
+        filename: '[name].bundle.js',
+        publicPath: '/'
     },
     plugins: [
         require('autoprefixer'),
@@ -84,7 +85,9 @@ module.exports = env => ({
             watch: true
         },
         compress: false,
-        historyApiFallback: true,
+        historyApiFallback: {
+            index: '/'
+        },
         hot: true,
         port: 3000,
         open: true

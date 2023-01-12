@@ -18,7 +18,7 @@ const userSlice = createSlice({
             const decoded = jwt_decode(action.payload.access_token);
             const user = {...action.payload, user: decoded};
 
-            localStorage.setItem('user', JSON.stringify(user));            
+            localStorage.setItem('user', JSON.stringify(user));
             return user;
         },
     }

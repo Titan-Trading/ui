@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
 import { Button, Alert } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { login } from 'API/users';
 import { setUser } from 'Redux/user';
 import { Input } from 'Components/Forms';
+import { PATHS } from 'Paths';
 
 export interface ILoginFormData {
     email: string;
@@ -18,13 +19,17 @@ const Login = () => {
     const { handleSubmit, register, formState: { errors } } = useForm();
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ error, setError ] = useState<boolean>(false);
+    const { authed } = PATHS;
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const submit = (data: ILoginFormData) => {
         setLoading(true);
 
         login(data).then(({ data }: any) => {
             dispatch(setUser(data));
+
+            navigate(authed.dashboard);
         }).catch((err) => {
             console.log(err);
 
