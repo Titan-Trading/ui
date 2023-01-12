@@ -28,7 +28,8 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
                     socketConnection.on('error', (err) => {
                         console.log(err);
                     });
-                
+                    
+                    // implemented else-where in the code
                     // socketConnection.on('message', (message) => {
                     //     console.log(message.data);
                     // });
@@ -54,9 +55,9 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
                         });
                         
                         const symbol = 'ETH-USDT';
-                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDER_UPDATE:' + symbol);
-                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDERBOOK_UPDATE:' + symbol);
-                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:KLINE_UPDATE:' + symbol)
+                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDER_UPDATE:' + symbol);
+                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDERBOOK_UPDATE:' + symbol);
+                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:KLINE_UPDATE:' + symbol);
                     });
                 
                     socketConnection.on('disconnect', () => {
