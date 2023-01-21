@@ -1,7 +1,6 @@
 import Request from './requests';
-import { IFormData } from 'Routes/Authed/User/ExchangeAccounts/ExchangeAccount';
-
-const API_URL = process.env.API_URL;
+import { IFormData } from 'Routes/Authed/UserSettings/ExchangeAccounts/ExchangeAccount';
+import { API_URL } from '../helpers/constants';
 
 export const getExchangeAccounts = () => Request({
     method: 'GET',

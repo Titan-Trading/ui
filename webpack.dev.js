@@ -58,6 +58,7 @@ module.exports = env => ({
             API: path.resolve(__dirname, 'resources/js/api/'),
             Redux: path.resolve(__dirname, 'resources/js/redux/'),
             Helpers: path.resolve(__dirname, 'resources/js/helpers/index.tsx'),
+            Layouts: path.resolve(__dirname, 'resources/js/layouts/'),
             Routes: path.resolve(__dirname, 'resources/js/pages/'),
             Paths: path.resolve(__dirname, 'resources/js/pages/index.tsx'),
             Images: path.resolve(__dirname, 'resources/images/'),
@@ -88,8 +89,13 @@ module.exports = env => ({
         historyApiFallback: {
             index: '/'
         },
-        hot: true,
         port: 3000,
-        open: true
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8000',
+                pathRewrite: { '^/api': '' },
+                // secure: false
+            }
+        }
     }
 });

@@ -30,15 +30,32 @@ const AppEntry = () => {
     return (
         <MantineProvider
             theme={{
+                colorScheme: 'dark',
                 fontFamily: 'Oxygen, sans serif',
                 colors: {
                     'charcoal': [ '#5e727c', '#264653' ],
                     'customGreen': [ '#2A9D8F' ],
                     'orange': [ '#E9C46A' ],
-                    'customRed': [ '#fefefe' ]
+                    'customRed': [ '#fefefe' ],
+
+                    // override dark colors to change them for all components
+                    // dark: [
+                    //     '#d5d7e0',
+                    //     '#acaebf',
+                    //     '#8c8fa3',
+                    //     '#666980',
+                    //     '#4d4f66',
+                    //     '#34354a',
+                    //     '#2b2c3d',
+                    //     '#1d1e30',
+                    //     '#0c0d21',
+                    //     '#01010a'
+                    // ]
                 },
                 spacing: { xs: 10, sm: 12, md: 16, lg: 20, xl: 24 },
             }}
+            withGlobalStyles
+            withNormalizeCSS
         >
             <NotificationsProvider
                 position="top-right" 

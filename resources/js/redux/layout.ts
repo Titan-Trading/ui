@@ -4,7 +4,8 @@ const initialState = {
     showLoader: false,
     error: null,
     success: null,
-    title: ''
+    title: '',
+    currentPage: null
 };
 
 const layoutSlice = createSlice({
@@ -25,7 +26,11 @@ const layoutSlice = createSlice({
         },
         setTitle: (slice, action) => {
             slice.title = action.payload;
+        },
+        setCurrentPage: (slice, action) => {
+            slice.currentPage = action.payload;
         }
+
     }
 });
 

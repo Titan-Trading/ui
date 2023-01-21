@@ -1,7 +1,6 @@
 import Request from './requests';
-
-const API_URL = process.env.API_URL;
 import IBotSession from '../models/BotSession';
+import { API_URL } from '../helpers/constants';
 
 export const getBotSessions = (projectId: string) => Request({
     method: 'GET',

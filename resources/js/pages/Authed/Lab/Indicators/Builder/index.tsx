@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
 import { PATHS } from 'Paths';
 import { setTitle } from 'Redux/layout';
-import { Anchor, Box, Breadcrumbs, Button, Grid, SegmentedControl, Tab, Text, TextInput } from '@mantine/core';
+import { Anchor, Box, Button, Grid, SegmentedControl, Tab, Text, TextInput } from '@mantine/core';
 import { FaChevronCircleRight, FaWindowClose } from 'react-icons/fa';
 import { getIndicator, updateIndicator } from 'API/indicators';
 import { Link } from 'react-router-dom';
@@ -17,12 +17,6 @@ const Builder = () => {
     const { indicatorId } = useParams();
     const { authed } = PATHS;
     const socket = useWebSocket();
-    const breadCrumbItems = [
-        {title: 'Dashboard', href: `/`},
-        {title: 'Lab', href: `/lab`},
-        {title: 'Indicator Builder', href: null}
-    ];
-    const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);
     const [ tab, setTab ] = useState<string>('1');
     const [ showForm, setShowForm ] = useState<boolean>(false);
     const [ indicator, setIndicator ] = useState<any>(null);
@@ -39,16 +33,15 @@ const Builder = () => {
 
     // load indicator details from api
     useEffect(() => {
-        const crumbs = breadCrumbItems.map((item, index) => (
-            item.href ? <Link to={item.href} key={index}>{item.title}</Link> : <Text key={index}>{item.title}</Text>
-        ));
-        setBreadCrumbs(crumbs);
-
         dispatch(setTitle(`Project - ${indicatorId}`));
 
         addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator loading...');
 
-        if(indicatorId && socket) {
+        if(socket) {
+            socket.on('connect', () => {
+                socket.emit('join_channel', 'INDICATOR_BUILDER:*:' + indicatorId);
+            });
+
             socket.on('message', (message) => {
                 if(message.meta.category !== 'INDICATOR_BUILDER') {
                     return;
@@ -64,30 +57,28 @@ const Builder = () => {
 
                 console.log(message);
             });
+        }
 
+        if(indicatorId) {
             getIndicator(parseInt(indicatorId)).then(({data}) => {
                 setIndicator(data);
                 setLastUpdated(data.updated_at);
                 setBuildVersion(data.algorithm_version);
 
                 addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator loaded successfully');
-
-                socket.emit('join_channel', 'INDICATOR_BUILDER:*:' + data.id);
             }).catch(e => {
                 // indicator is not found redirect to indicator list view
-                navigate(`/indicators`);
+                navigate(`/lab/indicators`);
             });
         }
         else {
             // indicator is not found redirect to indicator list view
-            navigate(`/indicators`);
+            navigate(`/lab/indicators`);
         }
-    }, []);
+    }, [indicatorId, socket]);
 
     return (
         <>
-            <Breadcrumbs className="breadcrumb-container">{breadCrumbs}</Breadcrumbs>
-
             {indicator && <>
                 <Grid columns={24}>
                     <Grid.Col span={18}>
@@ -136,7 +127,7 @@ const Builder = () => {
                         }}>Build &nbsp;</Button>&nbsp;
                         <Button onClick={() => {
                             // go to indicator test page
-                            navigate(`/indicators/${indicatorId}/test-setup`);
+                            navigate(`/lab/indicators/${indicatorId}/backtest-setup`);
                         }}>Test &nbsp;<FaChevronCircleRight /></Button>
                     </Grid.Col>
                 </Grid>
@@ -144,10 +135,16 @@ const Builder = () => {
                 {/* Code editor */}
                 <div style={{marginTop: '14px'}}>
                     <Editor
-                        height="70vh"
+                        height="64vh"
                         defaultLanguage="typescript"
                         theme="vs-dark"
+                        path={`inmemory://models/${indicatorId}/IndicatorStrategy.ts`}
                         value={indicator.algorithm_text}
+                        options={{
+                            minimap: { enabled: false },
+                            scrollBeyondLastLine: false,
+                            language: 'typescript'
+                        }}
                         onChange={(code, event) => {
                             indicator.algorithm_text = code;
                             setIndicator(indicator);
@@ -166,10 +163,41 @@ const Builder = () => {
                             setAutoSaveHandle(saveTimeout);*/
                         }}
                         onMount={(editor, monaco) => {
-                            monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // editorRef.current = editor;
+
+                            monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+                                allowNonTsExtensions: true
+                            });
+
+                            monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+
+                            const defModel = monaco.editor.createModel(`class IndicatorAlgorithm {
+                                getSymbol() {
+                                    return 'BTCUSDT';
+                                }
+
+                                getParameter(type, periods) {
+                                    return 1;
+                                }
+
+                                getHistoricData(periods) {
+                                    return [];
+                                }
+
+                                setReady(isReady) {
+                                    this.isReady = isReady;
+                                }
+
+                                setValues(value) {
+                                    this.value = value;
+                                }
+                            }`, "typescript", monaco.Uri.parse(`inmemory://models/${indicatorId}/IndicatorAlgorithm.ts`));
+                            // editor.setModel(defModel);
                         }}
                         onValidate={(markers) => {
-                            monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
                         }}
                     />
                 </div>
@@ -180,7 +208,8 @@ const Builder = () => {
                     fullWidth
                     value={tab}
                     onChange={setTab}
-                    color="dark"
+                    // color="dark"
+                    style={{ marginTop: '8px' }}
                     data={[
                         { label: 'Cloud Terminal', value: '1' },
                         { label: 'Problems', value: '2' }

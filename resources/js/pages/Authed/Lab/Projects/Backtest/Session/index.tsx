@@ -23,7 +23,7 @@ const Session = () => {
     const breadCrumbItems = [
         {title: 'Dashboard', href: `/`},
         {title: 'Lab', href: `/lab`},
-        {title: 'Project builder', href: `/projects/${projectId}`},
+        {title: 'Project builder', href: `/lab/projects/${projectId}`},
         {title: 'Backtest', href: null},
     ];
     const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);
@@ -106,8 +106,6 @@ const Session = () => {
 
     return (
         <>
-            <Breadcrumbs className="breadcrumb-container">{breadCrumbs}</Breadcrumbs>
-
             {/* Project name */}
             <h3>{session?.name}</h3>
 

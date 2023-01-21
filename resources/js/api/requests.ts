@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { isEmpty } from 'ramda';
+import { API_URL } from '../helpers/constants';
 
 let isRefreshing = false;
 let failedQueue: any = [];
@@ -14,7 +15,7 @@ const processQueue = (error: any, token = null) => {
 };
 
 const Request = axios.create({
-    baseURL: process.env.API_URL,
+    baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json'
     }
@@ -41,21 +42,30 @@ Request.interceptors.request.use(
 Request.interceptors.response.use(
     // success
     (res) => res,
+
     // failure
     async (err) => {
+        // if no response was received, reject the promise
         if (!err.response) return Promise.reject(err);
 
         const originalRequest = err.config;
         const { status } = err.response;
 
+        // if the token has expired, try to refresh it
         if(status === 401 && !originalRequest._retry) {
+            console.log('unauthorized');
+
+            // if the token is already being refreshed, add the failed request to the queue and replay the request or reject the promise
             if(isRefreshing) {
                 return new Promise((resolve, reject) => {
+                    console.log('pushing to queue');
                     failedQueue.push({resolve, reject});
                 }).then(token => {
+                    console.log('replaying request');
                     originalRequest.headers['X-Auth-Token'] = 'Bearer ' + token;
                     return Request(originalRequest);
                 }).catch(err => {
+                    console.log('rejecting request');
                     return Promise.reject(err);
                 });
             }
@@ -67,13 +77,20 @@ Request.interceptors.response.use(
                 const userJwt = localStorage.getItem('user');
                 const user = userJwt ? JSON.parse(userJwt) : null;
 
+                // if the user is not logged in, reject the promise
                 if (!user) {
+                    console.log('no user');
                     return;
                 }
 
+                console.log('user data: ' + userJwt);
+                console.log('user: ', user);
+                
+                // refresh the token
+                console.log('refreshing token...');
                 Request({
                     method: 'POST',
-                    url: '/auth/refresh',
+                    url: `${API_URL}/auth/refresh`,
                     headers: {
                         'X-Auth-Token': user.access_token
                     },
@@ -81,15 +98,20 @@ Request.interceptors.response.use(
                         refresh_token: user.refresh_token
                     }
                 }).then(({data}) => {
+                    console.log('token refreshed');
+                    console.log(data);
+
                     axios.defaults.headers['X-Auth-Token'] = 'Bearer ' + data.access_token;
                     originalRequest.headers['X-Auth-Token'] = 'Bearer ' + data.access_token;
 
+                    data.user = user.user;
                     localStorage.setItem('user', JSON.stringify(data));
 
                     processQueue(null, data.access_token);
 
                     resolve(Request(originalRequest));
                 }).catch(err => {
+                    console.log('token refresh failed', err);
                     // token expired or has been revoked so it cannot be refreshed
                     localStorage.removeItem('user');
 

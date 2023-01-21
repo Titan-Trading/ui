@@ -25,7 +25,7 @@ const IndicatorTestSetup = () => {
     const breadCrumbItems = [
         {title: 'Dashboard', href: `/`},
         {title: 'Lab', href: `/lab`},
-        {title: 'Indicator builder', href: `/indicators/${indicatorId}`},
+        {title: 'Indicator builder', href: `/lab/indicators/${indicatorId}`},
         {title: 'Setup test', href: null},
     ];
     const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);
@@ -53,6 +53,9 @@ const IndicatorTestSetup = () => {
                 setProject(data);
 
                 let params = JSON.parse(data.parameter_options);
+                if(!params.length) {
+                    return;
+                }
 
                 // set all values to null
                 params = params.map((param: any) => {
@@ -65,7 +68,7 @@ const IndicatorTestSetup = () => {
                 console.log(e);
 
                 // indicator is not found redirect to indicator list view
-                navigate(`/indicators`);
+                navigate(`/lab/indicators`);
             });
 
             // load connected exchanges from api
@@ -80,8 +83,8 @@ const IndicatorTestSetup = () => {
             });
         }
         else {
-            // project is not found redirect to project list view
-            navigate(`/projects`);
+            // indicator is not found redirect to indicator list view
+            navigate(`/lab/indicators`);
         }
     }, []);
 
@@ -212,15 +215,13 @@ const IndicatorTestSetup = () => {
         console.log(newTest);
 
         createIndicatorTest(newTest).then(({data}) => {
-            navigate(`/indicators/${data.indicator_id}/tests/${data.id}`);
+            navigate(`/lab/indicators/${data.indicator_id}/backtests/${data.id}`);
         });
     };
 
     return (
         <>
-            <Breadcrumbs className="breadcrumb-container">{breadCrumbs}</Breadcrumbs>
-
-            {(indicator && parameters.length) && <>
+            {indicator && <>
                 {/* Indicator name */}
                 <h3 style={{marginTop: '0'}}>Indicator: {indicator?.name}</h3>
 

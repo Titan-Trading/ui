@@ -23,6 +23,7 @@
     },
     "homepage": "https://bitbucket.org/tradersanonymous/simple-trader-ui#readme",
     "dependencies": {
+        "@mantine/carousel": "^5.10.0",
         "@mantine/core": "^4.1.1",
         "@mantine/dates": "^4.1.1",
         "@mantine/ds": "^5.6.3",
@@ -42,6 +43,7 @@
         "currency-formatter": "^1.5.9",
         "dayjs": "^1.11.0",
         "dotenv": "^10.0.0",
+        "embla-carousel-react": "^7.0.5",
         "jwt-decode": "^3.1.2",
         "lightweight-charts": "^3.8.0",
         "logrocket": "^2.1.3",

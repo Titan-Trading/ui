@@ -53,6 +53,7 @@ module.exports = env => ({
             API: path.resolve(__dirname, 'resources/js/api/'),
             Redux: path.resolve(__dirname, 'resources/js/redux/'),
             Helpers: path.resolve(__dirname, 'resources/js/helpers/index.tsx'),
+            Layouts: path.resolve(__dirname, 'resources/js/layouts/'),
             Routes: path.resolve(__dirname, 'resources/js/pages/'),
             Paths: path.resolve(__dirname, 'resources/js/pages/index.tsx'),
             Images: path.resolve(__dirname, 'resources/images/'),

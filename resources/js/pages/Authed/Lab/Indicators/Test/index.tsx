@@ -23,7 +23,7 @@ const TestIndicator = () => {
     const breadCrumbItems = [
         {title: 'Dashboard', href: `/`},
         {title: 'Lab', href: `/lab`},
-        {title: 'Indicator builder', href: `/indicators/${indicatorId}`},
+        {title: 'Indicator builder', href: `/lab/indicators/${indicatorId}`},
         {title: 'Test', href: null},
     ];
     const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);

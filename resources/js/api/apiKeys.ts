@@ -1,8 +1,6 @@
 import Request from './requests';
-
-import { IFormData } from 'Routes/Authed/User/API/APIKey';
-
-const API_URL = process.env.API_URL;
+import { IFormData } from 'Routes/Authed/UserSettings/API/APIKey';
+import { API_URL } from '../helpers/constants';
 
 export const getAPIKeys = () => Request({
     method: 'GET',

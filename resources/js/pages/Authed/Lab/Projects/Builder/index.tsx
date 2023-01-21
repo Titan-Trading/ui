@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Editor from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
-// import CodeEditor from '@uiw/react-textarea-code-editor';
-// import Editor from 'react-simple-code-editor';
-// import Prism, { highlight } from 'prismjs';
-// import 'prismjs/components/prism-clike';
-// import 'prismjs/components/prism-typescript';
-// import 'prismjs/themes/prism.css';
-import { Console, Hook, Unhook, Decode } from 'console-feed';
 import { PATHS } from 'Paths';
 import { setTitle } from 'Redux/layout';
-import { Anchor, Box, Breadcrumbs, Button, Grid, SegmentedControl, Tab, Text, TextInput } from '@mantine/core';
-import { FaBuilding, FaChevronCircleRight, FaWindowClose } from 'react-icons/fa';
+import { Anchor, Box, Button, Grid, SegmentedControl, Tab, Text, TextInput } from '@mantine/core';
+import { FaBuilding, FaChevronCircleRight, FaCog, FaWindowClose } from 'react-icons/fa';
 import { BsGearFill, BsLightning } from 'react-icons/bs';
 import { getBot, updateBot } from 'API/bots';
 import { useWebSocket } from 'Components/WebSocketContext';
@@ -26,12 +19,7 @@ const Builder = () => {
     const { projectId } = useParams();
     const { authed } = PATHS;
     const socket = useWebSocket();
-    const breadCrumbItems = [
-        {title: 'Dashboard', href: `/`},
-        {title: 'Lab', href: `/lab`},
-        {title: 'Project builder', href: null}
-    ];
-    const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);
+    const editorRef = useRef<any>(null);
     const [ tab, setTab ] = useState<string>('1');
     const [ showForm, setShowForm ] = useState<boolean>(false);
     const [ project, setProject ] = useState<any>(null);
@@ -48,16 +36,14 @@ const Builder = () => {
 
     // load project details from api
     useEffect(() => {
-        const crumbs = breadCrumbItems.map((item, index) => (
-            item.href ? <Link to={item.href} key={index}>{item.title}</Link> : <Text key={index}>{item.title}</Text>
-        ));
-        setBreadCrumbs(crumbs);
-
         dispatch(setTitle(`Project - ${projectId}`));
 
         addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy loading...');
 
-        if(projectId && socket) {
+        if(socket) {
+            socket.on('connect', () => {
+                socket.emit('join_channel', 'STRATEGY_BUILDER:*:' + projectId);
+            });
 
             socket.on('message', (message) => {
                 if(message.meta.category !== 'STRATEGY_BUILDER') {
@@ -74,34 +60,34 @@ const Builder = () => {
 
                 console.log(message);
             });
+        }
 
+        if(projectId) {
             getBot(parseInt(projectId)).then(({data}) => {
                 setProject(data);
                 setLastUpdated(data.updated_at);
                 setBuildVersion(data.algorithm_version);
 
                 addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy loaded successfully');
-
-                socket.emit('join_channel', 'STRATEGY_BUILDER:*:' + data.id);
             }).catch(e => {
+                console.log(e);
+
                 // project is not found redirect to project list view
-                // navigate(`/projects`);
+                navigate(`/lab/projects`);
             });
         }
         else {
             // project is not found redirect to project list view
-            // navigate(`/projects`);
+            navigate(`/lab/projects`);
         }
     }, [projectId, socket]);
 
     return (
         <>
-            <Breadcrumbs className="breadcrumb-container">{breadCrumbs}</Breadcrumbs>
-
             {project && <>
                 
                 <Grid columns={24}>
-                    <Grid.Col span={18}>
+                    <Grid.Col span={12}>
                         {/* Project name */}
                         {!!!showForm ? <h3 style={{marginTop: '0'}} onClick={() => {
                             setShowForm(true);
@@ -136,31 +122,43 @@ const Builder = () => {
                             build: v{buildVersion}
                         </Text>
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={12} style={{textAlign: 'right'}}>
                         {/* Buttons/Controls */}
-                        <Button onClick={() => {
+                        <Button disabled={buildVersion === project.algorithm_version} onClick={() => {
                             updateBot(project.id, project).then(({data}) => {
                                 setLastUpdated(data.updated_at);
                                 setBuildVersion(data.algorithm_version);
                                 addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
                             });
-                        }}>Build &nbsp;</Button>&nbsp;
-                        <Button onClick={() => {
+                        }}>Build &nbsp;<FaCog /></Button>&nbsp;
+                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
                             // go to backtest setup page
-                            navigate(`/projects/${projectId}/backtest-setup`);
+                            navigate(`/lab/projects/${projectId}/backtest-setup`);
                         }}>Backtest &nbsp;<FaChevronCircleRight /></Button>&nbsp;
-                        <Button disabled={true}>Optimize &nbsp;<BiUpvote /></Button>&nbsp;
-                        <Button disabled={true}>Go Live &nbsp;<BsLightning /></Button>
+                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
+                            // go to live setup page
+                            navigate(`/lab/projects/${projectId}/optimize-setup`);
+                        }}>Optimize &nbsp;<BiUpvote /></Button>&nbsp;
+                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
+                            // go to live setup page
+                            navigate(`/lab/projects/${projectId}/live-setup`);
+                        }}>Go Live &nbsp;<BsLightning /></Button>
                     </Grid.Col>
                 </Grid>
 
                 {/* Code editor */}
                 <div style={{marginTop: '14px'}}>
                     <Editor
-                        height="70vh"
+                        height="64vh"
                         defaultLanguage="typescript"
                         theme="vs-dark"
+                        path={`inmemory://models/${projectId}/Strategy.ts`}
                         value={project.algorithm_text}
+                        options={{
+                            minimap: { enabled: false },
+                            scrollBeyondLastLine: false,
+                            language: 'typescript'
+                        }}
                         onChange={(code, event) => {
                             project.algorithm_text = code;
                             setProject(project);
@@ -179,10 +177,45 @@ const Builder = () => {
                             setAutoSaveHandle(saveTimeout);*/
                         }}
                         onMount={(editor, monaco) => {
-                            monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            editorRef.current = editor;
+
+                            monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+                                allowNonTsExtensions: true
+                            });
+
+                            monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+
+                            const defModel = monaco.editor.createModel(`class StrategyAlgorithm {
+                                setCash(cash) {
+
+                                }
+
+                                addSymbol(symbol, inteval) {
+                                    return 'ok';
+                                }
+
+                                addIndicator(symbol, indicatorName, options) {
+                                    return {isReady: () => true, getCurrentValue: () => 0};
+                                }
+
+                                getParameter(type, name) {
+                                    return 0;
+                                }
+
+                                calculateOrderQuantity(symbol, risk) {
+                                    return 0;
+                                }
+
+                                marketOrder(symbol, quantity, price = 0) {
+
+                                }
+                            }`, "typescript", monaco.Uri.parse(`inmemory://models/${projectId}/StrategyAlgorithm.ts`));
+                            // editor.setModel(defModel);
+
                         }}
                         onValidate={(markers) => {
-                            monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
+                            // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
                         }}
                     />
                 </div>
@@ -193,7 +226,8 @@ const Builder = () => {
                     fullWidth
                     value={tab}
                     onChange={setTab}
-                    color="dark"
+                    style={{marginTop: '8px'}}
+                    // color="dark"
                     data={[
                         { label: 'Cloud Terminal', value: '1' },
                         { label: 'Problems', value: '2' }

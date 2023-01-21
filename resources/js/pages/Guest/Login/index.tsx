@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
-import { Button, Alert } from '@mantine/core';
+import { Button, Alert, Text, Space } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -38,7 +38,17 @@ const Login = () => {
         });
     };
 
-    return (
+    return (<>
+        <Text 
+            color="dimmed"
+            sx={(theme) => ({
+                marginBottom: theme.spacing.xl
+            })}
+        >
+            Login to your account
+        </Text>
+        <Space h={30} />
+
         <form onSubmit={handleSubmit(submit)}>
             {error && (
                 <Alert 
@@ -80,14 +90,20 @@ const Login = () => {
             >
                 Log In
             </Button>
+
+            <Link to="/signup">
+                <Button variant="subtle">
+                    Don't have an account?
+                </Button>
+            </Link>
             
             <Link to="/forgot-password">
                 <Button variant="subtle">
-                    Forgot Password
+                    Forgot your password?
                 </Button>
             </Link>
         </form>
-    )
+    </>);
 }
 
 export default Login;

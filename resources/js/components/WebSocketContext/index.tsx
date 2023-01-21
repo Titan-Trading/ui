@@ -30,9 +30,9 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
                     });
                     
                     // implemented else-where in the code
-                    // socketConnection.on('message', (message) => {
-                    //     console.log(message.data);
-                    // });
+                    socketConnection.on('message', (message) => {
+                        console.log(message.data);
+                    });
                 
                     socketConnection.on('channel_joined', (message) => {
                         console.log(message);

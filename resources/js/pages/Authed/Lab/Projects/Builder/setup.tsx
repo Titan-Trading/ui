@@ -25,7 +25,7 @@ const BacktestSetup = () => {
     const breadCrumbItems = [
         {title: 'Dashboard', href: `/`},
         {title: 'Lab', href: `/lab`},
-        {title: 'Project builder', href: `/projects/${projectId}`},
+        {title: 'Project builder', href: `/lab/projects/${projectId}`},
         {title: 'Setup backtest', href: null},
     ];
     const [ breadCrumbs, setBreadCrumbs ] = useState<any>([]);
@@ -56,18 +56,20 @@ const BacktestSetup = () => {
 
                 // set all values to null
                 if(!params.length) {
-                    params = params.map((param: any) => {
-                        param.value = '';
-                        return param;
-                    });
-
-                    setSessionParameters(params);
+                    return;
                 }
+
+                params = params.map((param: any) => {
+                    param.value = '';
+                    return param;
+                });
+
+                setSessionParameters(params);
             }).catch(e => {
                 console.log(e);
 
                 // project is not found redirect to project list view
-                navigate(`/projects`);
+                navigate(`/lab/projects`);
             });
 
             // load connected exchanges from api
@@ -83,7 +85,7 @@ const BacktestSetup = () => {
         }
         else {
             // project is not found redirect to project list view
-            navigate(`/projects`);
+            navigate(`/lab/projects`);
         }
     }, []);
 
@@ -211,14 +213,12 @@ const BacktestSetup = () => {
         newSession.ended_at = new Date(datePickerValue[1]).toISOString().slice(0, 19).replace('T', ' ');
 
         createBotSession(newSession).then(({data}) => {
-            navigate(`/projects/${data.bot_id}/backtests/${data.id}`);
+            navigate(`/lab/projects/${data.bot_id}/backtests/${data.id}`);
         });
     };
 
     return (
         <>
-            <Breadcrumbs className="breadcrumb-container">{breadCrumbs}</Breadcrumbs>
-
             {project && <>
                 {/* Project name */}
                 <h3 style={{marginTop: '0'}}>Project: {project?.name}</h3>

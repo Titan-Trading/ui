@@ -1,7 +1,6 @@
 import Request from './requests';
-
-const API_URL = process.env.API_URL;
 import IIndicatorTest from '../models/IndicatorTest';
+import { API_URL } from '../helpers/constants';
 
 export const getIndicatorTests = (indicatorId: number) => Request({
     method: 'GET',
