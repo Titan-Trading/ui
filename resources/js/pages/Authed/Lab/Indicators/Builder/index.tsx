@@ -6,7 +6,7 @@ import * as monaco from 'monaco-editor';
 import { PATHS } from 'Paths';
 import { setTitle } from 'Redux/layout';
 import { Anchor, Box, Button, Grid, SegmentedControl, Tab, Text, TextInput } from '@mantine/core';
-import { FaChevronCircleRight, FaWindowClose } from 'react-icons/fa';
+import { FaChevronCircleRight, FaCog, FaWindowClose } from 'react-icons/fa';
 import { getIndicator, updateIndicator } from 'API/indicators';
 import { Link } from 'react-router-dom';
 import { useWebSocket } from 'Components/WebSocketContext';
@@ -28,19 +28,19 @@ const Builder = () => {
     const [ pConsoleText, setPConsoleText ] = useState<string>('');
 
     const addConsoleLine = (f: any, v: any, text: string) => {
-        f(v + `[${(new Date()).toISOString()}]: ` + text + "\n\r");
+        // f(v + `[${(new Date()).toISOString()}]: ` + text + "\n\r");
+        const date = new Date();
+
+        const timestamp = date.toLocaleString();
+
+        f(v + `[${timestamp}]: ` + text + "\n\r");
     };
 
     // load indicator details from api
     useEffect(() => {
-        dispatch(setTitle(`Project - ${indicatorId}`));
-
-        addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator loading...');
-
         if(socket) {
-            socket.on('connect', () => {
-                socket.emit('join_channel', 'INDICATOR_BUILDER:*:' + indicatorId);
-            });
+            // subscribe to build events
+            socket.emit('join_channel', 'INDICATOR_BUILDER:*:' + indicatorId);
 
             socket.on('message', (message) => {
                 if(message.meta.category !== 'INDICATOR_BUILDER') {
@@ -48,10 +48,14 @@ const Builder = () => {
                 }
 
                 if(message.meta.type === 'BUILD_COMPLETED') {
-                    addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator strategy built successfully in ' + message.data.buildTime + 'ms');
+                    addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator built successfully in ' + message.data.buildTime + 'ms');
+
+                    setIndicator(message.data.indicator);
+                    setLastUpdated(message.data.indicator.updated_at);
+                    setBuildVersion(message.data.indicator.algorithm_version);
                 }
                 else if(message.meta.type === 'ERROR') {
-                    addConsoleLine(setPConsoleText, pConsoleText, 'Indicator strategy failed to build!');
+                    addConsoleLine(setPConsoleText, pConsoleText, 'Indicator failed to build!');
                     addConsoleLine(setPConsoleText, pConsoleText, JSON.stringify(message.data.error));
                 }
 
@@ -59,13 +63,24 @@ const Builder = () => {
             });
         }
 
+        // unmount
+        return () => {
+            if(socket) {
+                socket.emit('leave_channel', 'INDICATOR_BUILDER:*:' + indicatorId);
+            }
+        };
+    }, [socket]);
+
+    useEffect(() => {
         if(indicatorId) {
+            dispatch(setTitle(`Project - ${indicatorId}`));
+
             getIndicator(parseInt(indicatorId)).then(({data}) => {
                 setIndicator(data);
                 setLastUpdated(data.updated_at);
                 setBuildVersion(data.algorithm_version);
 
-                addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator loaded successfully');
+                addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator successfully loaded');
             }).catch(e => {
                 // indicator is not found redirect to indicator list view
                 navigate(`/lab/indicators`);
@@ -75,7 +90,7 @@ const Builder = () => {
             // indicator is not found redirect to indicator list view
             navigate(`/lab/indicators`);
         }
-    }, [indicatorId, socket]);
+    }, [indicatorId]);
 
     return (
         <>
@@ -95,16 +110,17 @@ const Builder = () => {
                             onChange={(event) => {
                                 indicator.name = event.currentTarget.value;
 
-                                addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator being saved...');
+                                // addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator being saved...');
 
                                 // debounce and send update to api
                                 clearTimeout(autosaveNameHandle);
                                 const saveNameTimeout = setTimeout(() => {
                                     updateIndicator(indicator.id, indicator).then(({data}) => {
+                                        setIndicator(data);
                                         setLastUpdated(data.updated_at);
                                         setBuildVersion(data.algorithm_version);
                                         setShowForm(false);
-                                        addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator saved');
+                                        // addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator saved');
                                     });
                                 }, 300);
                                 setAutoSaveNameHandle(saveNameTimeout);
@@ -118,13 +134,14 @@ const Builder = () => {
                     </Grid.Col>
                     <Grid.Col span={6}>
                         {/* Buttons/Controls */}
-                        <Button onClick={() => {
+                        <Button disabled={/*buildVersion === indicator.algorithm_version*/false} onClick={() => {
                             updateIndicator(indicator.id, indicator).then(({data}) => {
+                                setIndicator(data);
                                 setLastUpdated(data.updated_at);
                                 setBuildVersion(data.algorithm_version);
-                                addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator saved');
+                                // addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator saved');
                             });
-                        }}>Build &nbsp;</Button>&nbsp;
+                        }}>Build &nbsp;<FaCog /></Button>&nbsp;
                         <Button onClick={() => {
                             // go to indicator test page
                             navigate(`/lab/indicators/${indicatorId}/backtest-setup`);
@@ -138,7 +155,7 @@ const Builder = () => {
                         height="64vh"
                         defaultLanguage="typescript"
                         theme="vs-dark"
-                        path={`inmemory://models/${indicatorId}/IndicatorStrategy.ts`}
+                        path={`inmemory://models/indicators/${indicatorId}/Indicator.ts`}
                         value={indicator.algorithm_text}
                         options={{
                             minimap: { enabled: false },
@@ -149,10 +166,10 @@ const Builder = () => {
                             indicator.algorithm_text = code;
                             setIndicator(indicator);
 
-                            addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator being saved...');
+                            /*addConsoleLine(setCTConsoleText, ctConsoleText, 'Indicator being saved...');
 
                             // debounce and send update to api
-                            /*clearTimeout(autosaveHandle);
+                            clearTimeout(autosaveHandle);
                             const saveTimeout = setTimeout(() => {
                                 updateIndicator(indicator.id, indicator).then(({data}) => {
                                     setLastUpdated(data.updated_at);
@@ -173,28 +190,36 @@ const Builder = () => {
 
                             monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
-                            const defModel = monaco.editor.createModel(`class IndicatorAlgorithm {
-                                getSymbol() {
-                                    return 'BTCUSDT';
-                                }
+                            let defModel = monaco.editor.getModel(monaco.Uri.parse(`inmemory://models/indicators/${indicatorId}/Sandbox.ts`));
+                            if (!defModel) {
+                                defModel = monaco.editor.createModel(`
+                                class Sandbox {
+                                    input(inputKey) {
 
-                                getParameter(type, periods) {
-                                    return 1;
-                                }
+                                    }
 
-                                getHistoricData(periods) {
-                                    return [];
-                                }
+                                    on(eventStream, callback) {
 
-                                setReady(isReady) {
-                                    this.isReady = isReady;
-                                }
+                                    }
 
-                                setValues(value) {
-                                    this.value = value;
-                                }
-                            }`, "typescript", monaco.Uri.parse(`inmemory://models/${indicatorId}/IndicatorAlgorithm.ts`));
-                            // editor.setModel(defModel);
+                                    setValue(value) {
+
+                                    }
+                                }`, "typescript", monaco.Uri.parse(`inmemory://models/indicators/${indicatorId}/Sandbox.ts`));
+                                // editor.setModel(defModel);
+                            }
+
+                            // custom keyboard shortcuts
+                            // save using cmd+s (ctrl+s on windows)
+                            editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+                                updateIndicator(indicator.id, indicator).then(({data}) => {
+                                    setIndicator(data);
+                                    setLastUpdated(data.updated_at);
+                                    setBuildVersion(data.algorithm_version);
+                                    // addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
+                                });
+                            }, 'save');
+                            
                         }}
                         onValidate={(markers) => {
                             // monaco.editor.setModelMarkers(monaco.editor.getModels()[0], "typescript", []);
@@ -204,7 +229,7 @@ const Builder = () => {
 
                 {/* Debug Console */}
                 <SegmentedControl 
-                    size="lg"
+                    size="sm"
                     fullWidth
                     value={tab}
                     onChange={setTab}

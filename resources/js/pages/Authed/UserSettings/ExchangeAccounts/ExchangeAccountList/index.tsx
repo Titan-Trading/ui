@@ -24,7 +24,7 @@ const ExchangeAccountList = ({
 
     const deleteModalSettings = {
         title: 'Are you sure?',
-        labels: { confirm: 'Delete Exchange Account', cancel: 'Cancel' },
+        labels: { confirm: 'Delete exchange account', cancel: 'Cancel' },
         confirmProps: { color: 'red' },
         closeOnConfirm: false,
     };
@@ -39,7 +39,7 @@ const ExchangeAccountList = ({
     const EmptyMessage = () => {
         return (
             <p>
-                No <strong>Exchange Accounts</strong> exist
+                No <strong>exchange accounts</strong> exist
             </p>
         );
     };
@@ -53,13 +53,13 @@ const ExchangeAccountList = ({
                 modals.closeAll();
                 notifications.showNotification({
                     title: 'Success!',
-                    message: 'Successfully deleted Exchange Accounts',
+                    message: 'Successfully deleted exchange account',
                 });
             }).catch(() => {
                 modals.closeAll();
                 notifications.showNotification({
                     title: 'Error!',
-                    message: 'Failed to delete Exchange Accounts',
+                    message: 'Failed to delete exchange account',
                     color: 'red'
                 });
             });
@@ -87,7 +87,7 @@ const ExchangeAccountList = ({
                     {exchange.api_key ? 'API Key' : 'Wallet Private Key'}
                 </Text>
                 <Code block style={{ whiteSpace: 'break-spaces', marginBottom: '20px' }}>
-                    {exchange.api_key ? exchange.api_key : exchange.wallet_private_key}
+                    {exchange.api_key ? exchange.api_key : 'Hidden'}
                 </Code>
                 <Button fullWidth onClick={() => modals.closeAll()}>
                     Close

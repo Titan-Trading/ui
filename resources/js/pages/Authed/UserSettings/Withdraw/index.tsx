@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Title, Alert, Grid, Text, Image } from '@mantine/core';
+import { Title, Alert, Grid } from '@mantine/core';
 import { HiXCircle } from 'react-icons/hi';
 
 // import CreateExchangeAccount from './Create';
@@ -8,7 +8,7 @@ import { HiXCircle } from 'react-icons/hi';
 
 
 
-const General = () => {
+const Withdraw = () => {
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ error, setError ] = useState<boolean>(false);
 
@@ -37,24 +37,14 @@ const General = () => {
     return (
         <>
             {/* Title with space for button */}
-            {/* <Grid columns={12} style={{margin: '8px 0'}}>
+            <Grid columns={12} style={{margin: '8px 0'}}>
                 <Grid.Col span={6}>
-                    <span style={{ margin: '25px 0', fontSize: '24px' }}>General settings</span>
+                    <span style={{ margin: '25px 0', fontSize: '24px' }}>Withdraw settings</span>
                 </Grid.Col>
                 <Grid.Col span={6} style={{textAlign: 'right'}}>
                     
                 </Grid.Col>
-            </Grid> */}
-
-            <Grid columns={12} style={{margin: '12px 0'}}>
-                <Grid.Col span={3}>
-                    <Image src={`https://picsum.photos/id/${(Math.round(Math.random() * Math.abs(100 - 1) + 1))}/200/300`} alt="coinbase" width={200} height={200} radius={3} />
-                </Grid.Col>
-                <Grid.Col span={9}>
-                    
-                </Grid.Col>
             </Grid>
-
             {/* <CreateExchangeAccount 
                 exchangeAccounts={exchangeAccounts} 
                 setExchangeAccounts={setExchangeAccounts} 
@@ -75,4 +65,4 @@ const General = () => {
     );
 };
 
-export default General;
+export default Withdraw;

@@ -51,7 +51,7 @@ const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormSteppe
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Stepper active={active} onStepClick={setActive} completedIcon={<RiCheckboxCircleLine size={22} />}>
-                <Stepper.Step label="Step One" description="Exchange Info">
+                <Stepper.Step label="Step one" description="Exchange info">
                     <ConnectExchangeAccount
                         control={control}
                         register={register} 
@@ -60,8 +60,8 @@ const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormSteppe
                     />
                 </Stepper.Step>
                 <Stepper.Step 
-                    label="Step Two" 
-                    description="Connect Exchange Account" 
+                    label="Step two" 
+                    description="Connect exchange account" 
                     allowStepSelect={!isEmpty(formData)}
                     loading={loading}
                     color={error ? 'red' : 'blue'}
@@ -70,13 +70,13 @@ const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormSteppe
                 >
                     <Group position="center" direction="column">
                         <Title order={3}>
-                            {error ? 'Unable to Connect Exchange Account' : 'Connecting Exchange Account...'}
+                            {error ? 'Unable to connect exchange account' : 'Connecting exchange account...'}
                         </Title>
                     </Group>
                 </Stepper.Step>
                 <Stepper.Completed>
                     <Group position="center" direction="column">
-                        <Title order={3}>Exchange Account Connected!</Title>
+                        <Title order={3}>Exchange account connected!</Title>
                         {active === 2 && (
                             <Text>This will automatically close in 3 seconds</Text>
                         )}
@@ -89,7 +89,7 @@ const CEFormStepper = ({ formData, loading, submit, handleClose }: ICEFormSteppe
                     {active === 0 ? 'Cancel' : 'Back'}
                 </Button>
                 <Button onClick={handleSubmit(onSubmit)} type="submit" disabled={active !== 0}>
-                    Connect Exchange Account
+                    Connect
                 </Button>
             </Group>
         </form>

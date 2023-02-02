@@ -36,9 +36,11 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
                 
                     socketConnection.on('channel_joined', (message) => {
                         console.log(message);
+                        // channels.push(message.channel);
+                        // TODO: add channel to channels array
                     });
 
-                    socketConnection.on('channel_joined_failed', (message) => {
+                    socketConnection.on('channel_left', (message) => {
                         console.log(message);
                     });
                     
@@ -47,17 +49,17 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
                         console.log('connected to server!');
                 
                         getExchangeAccounts().then((res) => {
-                            if(res.data.length) {
-                                for(let iA in res.data) {
-                                    socketConnection.emit('join_channel', 'EXCHANGE_ACCOUNT_DATA:TRADE_UPDATE:' + res.data[iA].id);
-                                }
-                            }
+                            // if(res.data.length) {
+                            //     for(let iA in res.data) {
+                            //         socketConnection.emit('join_channel', 'EXCHANGE_ACCOUNT_DATA:TRADE_UPDATE:' + res.data[iA].id);
+                            //     }
+                            // }
                         });
                         
-                        const symbol = 'ETH-USDT';
-                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDER_UPDATE:' + symbol);
-                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDERBOOK_UPDATE:' + symbol);
-                        socketConnection.emit('join_channel', 'EXCHANGE_DATA:KLINE_UPDATE:' + symbol);
+                        // const symbol = 'ETH-USDT';
+                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDER_UPDATE:' + symbol);
+                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:ORDERBOOK_UPDATE:' + symbol);
+                        // socketConnection.emit('join_channel', 'EXCHANGE_DATA:KLINE_UPDATE:' + symbol);
                     });
                 
                     socketConnection.on('disconnect', () => {
@@ -71,7 +73,7 @@ const WebSocketProvider: FunctionComponent<{ children: ReactNode }> = ({ childre
         catch (err) {
             console.log(err);
         }
-    }, []);
+    }, [userStore]);
 
     return (
         <WebSocketContext.Provider value={connection}>

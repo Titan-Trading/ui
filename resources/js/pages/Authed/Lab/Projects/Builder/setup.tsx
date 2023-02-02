@@ -10,11 +10,15 @@ import { getExchangeAccounts } from 'API/exchangeAccounts';
 import { createBotSession } from 'API/botSessions';
 import { getExchangeSymbols } from 'API/exchanges';
 import { Link } from 'react-router-dom';
+import { FaChevronLeft } from 'react-icons/fa';
+import { BiChevronLeft } from 'react-icons/bi';
 
 interface Parameter {
-    type: string,
-    key: string,
-    value: any
+    type: string;
+    key: string;
+    name: string;
+    value: any;
+    defaultValue: any;
 }
 
 const BacktestSetup = () => {
@@ -34,6 +38,7 @@ const BacktestSetup = () => {
     const [ symbolOptions, setSymbolOptions ] = useState<any>([]);
     const [ sessionParameters, setSessionParameters ] = useState<Array<Parameter>>([]);
     const [ sessionName, setSessionName ] = useState<any>('');
+    const [ initialBalance, setInitialBalance ] = useState<any>(1000);
     const [ datePickerValue, setDatePickerValue ] = useState<any>([new Date(2022, 11, 1), new Date(2022, 11, 7)]);
     const [ exchangeAccounts, setExchangeAccounts ] = useState<Array<any>>([]);
     const [ exchangeAccountOptions, setExchangeAccountOptions ] = useState<Array<any>>([]);
@@ -76,7 +81,7 @@ const BacktestSetup = () => {
             getExchangeAccounts().then(({data}) => {
                 let foundAccounts: any = [];
                 data.forEach((account: any, index: Number) => {
-                    foundAccounts.push(account.exchange.name + ' - ' + account.api_key);
+                    foundAccounts.push(account.exchange.name + ' - ' + account.name);
                 });
 
                 setExchangeAccountOptions(foundAccounts);
@@ -104,13 +109,34 @@ const BacktestSetup = () => {
 
     // event handler for when a text input is changed
     const onTextInputChange = (index: any, event: any) => {
-        if(typeof event === 'undefined' || typeof event.currentTarget === 'undefined' || typeof event.currentTarget.value === 'undefined') {
-            return;
-        }
+        // if(typeof event === 'undefined' || typeof event.currentTarget === 'undefined' || typeof event.currentTarget.value === 'undefined') {
+        //     return;
+        // }
 
         const params = JSON.parse(JSON.stringify(sessionParameters));
 
+        // console.log('text changed', params);
+
         params[index].value = event.currentTarget.value;
+
+        // console.log('new text value: ' + params[index].value);
+
+        setSessionParameters(params);
+    };
+
+    // event handler for when a number input is changed
+    const onNumberInputChanged = (index: any, value: any) => {
+        // if(typeof event === 'undefined' || typeof event.currentTarget === 'undefined' || typeof event.currentTarget.value === 'undefined') {
+        //     return;
+        // }
+
+        const params = JSON.parse(JSON.stringify(sessionParameters));
+
+        // console.log('number changed', params);
+
+        params[index].value = value;
+
+        // console.log('new number value: ' + params[index].value);
 
         setSessionParameters(params);
     };
@@ -119,12 +145,21 @@ const BacktestSetup = () => {
     const onSymbolInputChange = (index: any, value: any) => {
         const params = JSON.parse(JSON.stringify(sessionParameters));
 
+        // console.log('index: ' + index);
+        // console.log('value: ' + value);
+        // console.log('current param value: ' + params[index].value);
+
+        let foundSymbol: any = null;
         const selectedSymbolParts = value.split(' - ');
-        symbols.forEach((symbol: any, index: number) => {
-            if(symbol.base_currency.name === selectedSymbolParts[0] && symbol.target_currency.name === selectedSymbolParts[1]) {
-                params[index].value = symbolOptions[index];
+        symbols.forEach((symbol: any, sIndex: number) => {
+            if(symbol.base_currency.name === selectedSymbolParts[0] && symbol.target_currency.name === selectedSymbolParts[1] && !foundSymbol) {
+                foundSymbol = symbolOptions[sIndex];
             }
         });
+
+        params[index].value = foundSymbol ? foundSymbol : value;
+
+        // console.log('new param value: ' + params[index].value);
 
         setSessionParameters(params);
     };
@@ -133,28 +168,44 @@ const BacktestSetup = () => {
     const renderSessionParameters = () => {
         let parameters = Array<any>([]);
 
+        // console.log('render strategy parameters:', sessionParameters);
+
         sessionParameters.forEach((param, index) => {
+            // console.log('render parameter:' + index, param);
+
             switch(param.type) {
                 case 'string':
                     parameters.push(<TextInput
-                        key={(index + 1)}
-                        label={param.key}
+                        key={param.key}
+                        label={param.name}
+                        placeholder={param.defaultValue}
                         value={sessionParameters[index].value}
                         onChange={onTextInputChange.bind(this, index)}
                     />);
                     break;
                 case 'integer':
+                    parameters.push(<NumberInput
+                        key={param.key}
+                        label={param.name}
+                        placeholder={param.defaultValue}
+                        value={sessionParameters[index].value}
+                        onChange={onNumberInputChanged.bind(this, index)}
+                        precision={0}
+                    />);
+                    break;
+                case 'float':
                     parameters.push(<TextInput
-                        key={(index + 1)}
-                        label={param.key}
+                        key={param.key}
+                        label={param.name}
+                        placeholder={param.defaultValue}
                         value={sessionParameters[index].value}
                         onChange={onTextInputChange.bind(this, index)}
                     />);
                     break;
                 case 'symbol':
                     parameters.push(<Autocomplete
-                        key={(index + 1)}
-                        label={param.key}
+                        key={param.key}
+                        label={param.name}
                         value={sessionParameters[index].value}
                         onChange={onSymbolInputChange.bind(this, index)}
                         placeholder="Start typing to see options"
@@ -176,7 +227,7 @@ const BacktestSetup = () => {
         let selected: any = null;
         const selectedKey = selectedExchangeAccount.split(' - ')[1];
         exchangeAccounts.forEach((account: any, index: number) => {
-            if(account.api_key === selectedKey) {
+            if(account.name === selectedKey) {
                 selected = account;
             }
         });
@@ -197,14 +248,18 @@ const BacktestSetup = () => {
                     }
                 });
             }
-            else if(param.type === 'integer') {
+            else if(param.type === 'float') {
                 param.value = parseFloat(param.value);
+            }
+            else if(param.type === 'integer') {
+                param.value = parseInt(param.value);
             }
         });
 
         const newSession: any = {};
         newSession.bot_id = projectId;
         newSession.name = sessionName;
+        newSession.initial_balance = initialBalance;
         newSession.exchange_account_id = selected.id;
         newSession.parameters = JSON.stringify(params);
         newSession.mode = 'backtest';
@@ -220,8 +275,10 @@ const BacktestSetup = () => {
     return (
         <>
             {project && <>
-                {/* Project name */}
-                <h3 style={{marginTop: '0'}}>Project: {project?.name}</h3>
+                <Link to={`/lab/projects/${projectId}`}><BiChevronLeft /> back  to strategy builder</Link>
+
+                {/* Strategy name */}
+                <h3 style={{marginTop: '0'}}>Strategy: {project?.name}</h3>
 
                 {/* Setup a backtest session */}
                 <form onSubmit={onFormSubmitted.bind(this)}>
@@ -235,6 +292,17 @@ const BacktestSetup = () => {
 
                             setSessionName(newSessionName);
                         }}
+                    />
+
+                    <NumberInput
+                        label="Initial balance"
+                        value={initialBalance}
+                        onChange={(value) => {
+                            const newInitialBalance = value;
+
+                            setInitialBalance(newInitialBalance);
+                        }}
+                        precision={2}
                     />
 
                     {/* Connected exchange account to use (auto-complete from API) */}
@@ -252,7 +320,7 @@ const BacktestSetup = () => {
                             let selected: any = null;
                             const selectedKey = value.split(' - ')[1];
                             exchangeAccounts.forEach((account: any, index: number) => {
-                                if(account.api_key === selectedKey) {
+                                if(account.name === selectedKey) {
                                     selected = account;
                                 }
                             });
@@ -278,7 +346,7 @@ const BacktestSetup = () => {
 
                     {/* Strategy Parameters */}
                     {sessionParameters.length ? <>
-                        <Text style={{marginTop: '12px'}}>Strategy Parameters</Text>
+                        <Text style={{marginTop: '24px'}}>Strategy Parameters</Text>
                         {renderSessionParameters()}
                     </> : <></>}
 

@@ -27,7 +27,7 @@ const CreateExchangeConnection = ({
         };
 
         const response = new Promise((resolve, reject) => {
-            const name = data.exchange_id.name;
+            const name = data.name;
 
             createExchangeAccount(payload).then(({ data }) => {
                 const newExchangeAccount = {
@@ -50,8 +50,9 @@ const CreateExchangeConnection = ({
 
     return (
         <>
-            <Button onClick={() => setOpened(true)}>Connect an Exchange Account</Button>
-            <ExchangeAccount 
+            <Button onClick={() => setOpened(true)}>Connect an exchange account</Button>
+            
+            <ExchangeAccount
                 opened={opened} 
                 setOpened={setOpened} 
                 loading={loading}

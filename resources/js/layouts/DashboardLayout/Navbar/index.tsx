@@ -30,7 +30,7 @@ export function Navbar() {
     {
       icon: IconShieldHalfFilled,
       label: 'War Room (coming soon)',
-      path: authed.war_room
+      path: authed.warRoom
     },
     {
       icon: FaMicroscope,
@@ -40,12 +40,12 @@ export function Navbar() {
     {
       icon: FaGraduationCap,
       label: 'Boot Camp',
-      path: authed.boot_camp
+      path: authed.bootCamp
     },
     {
       icon: BsLightningFill,
       label: 'Live Trading',
-      path: authed.live_trading
+      path: authed.liveTrading
     },
     {
       icon: FaStore,
@@ -114,6 +114,13 @@ export function Navbar() {
           <NavbarLink icon={IconLogout} label="Logout" onClick={() => handleLogout()} />
         </Stack>
       </Nav.Section>
+      {/* <Nav.Section className={classes.footer}>
+        <UserButton
+          image="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
+          name="Ann Nullpointer"
+          email="anullpointer@yahoo.com"
+        />
+      </Nav.Section> */}
     </Nav>
   );
 }

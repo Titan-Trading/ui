@@ -7,6 +7,7 @@ import ExchangeAccounts from './ExchangeAccounts';
 import { setTitle } from 'Redux/layout';
 import Billing from './Billing';
 import General from './General';
+import Withdraw from './Withdraw';
 
 const UserSettings = () => {
     const dispatch = useDispatch();
@@ -14,18 +15,19 @@ const UserSettings = () => {
     const settingsPages = [
         <General key={0} />,
         <Billing key={1} />,
-        <ExchangeAccounts key={2} />,
-        <API key={3} />
+        <Withdraw key={2} />,
+        <ExchangeAccounts key={3} />,
+        <API key={4} />
     ];
 
     useEffect(() => {
-        dispatch(setTitle('Settings'));
+        dispatch(setTitle('User settings'));
     }, []);
 
     return (
         <>
             <SegmentedControl 
-                size="lg"
+                size="sm"
                 fullWidth
                 value={tab}
                 onChange={setTab}
@@ -33,8 +35,9 @@ const UserSettings = () => {
                 data={[
                     { label: 'General', value: '1' },
                     { label: 'Billing', value: '2' },
-                    { label: 'Exchange Accounts', value: '3' },
-                    { label: 'API Keys', value: '4' }
+                    { label: 'Withdraw', value: '3'},
+                    { label: 'Exchange accounts', value: '4' },
+                    { label: 'API keys', value: '5' }
                 ]}
             />
             <Box styles={{ paddingTop: '75px' }}>

@@ -1,25 +1,45 @@
 import React from 'react';
 import {
     Dashboard,
+
     WarRoom,
+
     Lab,
     Projects,
     ProjectBuilder,
     ProjectTestSetup,
     ProjectTest,
+    ProjectOptimizationSetup,
+    ProjectOptimization,
+    ProjectLiveSetup,
     Indicators,
     IndicatorBuilder,
     IndicatorTestSetup,
     IndicatorTest,
+
     BootCamp,
+    BootCampCourse,
+    BootCampLesson,
+
     LiveTrading,
+    LiveTradingSession,
+
     Marketplace,
     ProductDetail,
+
     Datasets,
+    DatasetDetail,
+
+    Support,
+    SupportTicket,
+
     UserSettings
 } from './Authed';
 import {
-    Login
+    Login,
+    Signup,
+    ForgotPassword,
+    Home
 } from './Guest';
 import {
     Error404
@@ -28,19 +48,19 @@ import { FaHome, FaMicroscope, FaStore } from 'react-icons/fa';
 import LoginLayout from '../layouts/LoginLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
 import GuestLayout from '../layouts/GuestLayout';
-import Home from './Guest/Home';
-import ForgotPassword from './Guest/ForgotPassword';
-import Signup from './Guest/Signup';
-import Support from './Authed/Support';
 
 const PATHS = {
     authed: {
         dashboard: '/',
 
-        // war room routes
-        war_room: '/war-room',
+        /**
+         * War room routes
+         */
+        warRoom: '/war-room',
 
-        // lab routes
+        /**
+         * Laboratory routes
+         */
         lab: '/lab',
 
         // strategies
@@ -48,6 +68,9 @@ const PATHS = {
         projectBuilder: '/lab/projects/:projectId',
         projectTestSetup: '/lab/projects/:projectId/backtest-setup',
         projectTest: '/lab/projects/:projectId/backtests/:sessionId',
+        projectOptimizationSetup: '/lab/projects/:projectId/optimization-setup',
+        projectOptimization: '/lab/projects/:projectId/optimizations/:sessionId',
+        projectLiveSetup: '/lab/projects/:projectId/live-setup',
 
         // indicators
         indicators: '/lab/indicators',
@@ -61,23 +84,45 @@ const PATHS = {
         signalTestSetup: '/lab/signals/:signalId/backtest-setup',
         signalTest: '/lab/signals/:signalId/backtests/:sessionId',
 
-        // learning boot camp routes
-        boot_camp: '/learning',
+        /**
+         * Boot camp routes
+         */
+        bootCamp: '/boot-camp',
+        course: '/boot-camp/:courseId',
+        lesson: '/boot-camp/:courseId/:lessonId',
 
-        // live trading routes
-        live_trading: '/live-trading',
+        /**
+         * Live trading routes
+         */
+        liveTrading: '/live-trading',
+        liveTradingSession: '/live-trading/:sessionId',
 
-        // store
+        /**
+         * Marketplace routes
+         */
         marketplace: '/marketplace',
         productDetail: '/marketplace/:productId',
 
-        // datasets routes
+        /**
+         * Datasets routes
+         */
         datasets: '/datasets',
         datasetDetail: '/datasets/:datasetId',
 
+        /**
+         * Support routes
+         */
         support: '/support',
+        supportTicket: '/support/:ticketId',
 
-        settings: '/settings'
+        /**
+         * Settings routes
+         */
+        settings: '/settings',
+        billingSettings: '/settings/billing',
+        withdrawalSettings: '/settings/withdrawal',
+        exchangeAccountsSettings: '/settings/exchange-accounts',
+        apiKeysSettings: '/settings/api-keys',
     },
     guest: {
         home: '/',
@@ -91,101 +136,146 @@ const BREADCRUMBS = {
     authed: {
         dashboard: [],
 
-        // war room routes
-        war_room: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'war room', href: null}
+        /**
+         * War room routes
+         */
+        warRoom: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'War Room', href: null}
         ],
 
-        // lab routes
+        /**
+         * Laboratory routes
+         */
         lab: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'laboratory', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Laboratory', href: null}
         ],
 
         // strategies
         projects: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'projects', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Projects', href: null}
         ],
         projectBuilder: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'projects', href: `/lab/projects`},
-            {icon: null, title: 'project builder', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Projects', href: `/lab/projects`},
+            {icon: null, title: 'Project builder', href: null}
         ],
         projectTestSetup: [],
         projectTest: [],
+        projectOptimizationSetup: [],
+        projectOptimization: [],
+        projectLiveSetup: [],
 
         // indicators
         indicators: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'indicators', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Indicators', href: null}
         ],
         indicatorBuilder: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'indicators', href: `/lab/indicators`},
-            {icon: null, title: 'indicator builder', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Indicators', href: `/lab/indicators`},
+            {icon: null, title: 'Indicator builder', href: null}
         ],
         indicatorTestSetup: [],
         indicatorTest: [],
 
         // signals
         signals: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'signals', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Signals', href: null}
         ],
         signalBuilder: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaMicroscope />, title: 'laboratory', href: `/lab`},
-            {icon: null, title: 'signal builder', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaMicroscope />, title: 'Laboratory', href: `/lab`},
+            {icon: null, title: 'Signal builder', href: null}
         ],
         signalTestSetup: [],
         signalTest: [],
 
-        // learning boot camp routes
-        boot_camp: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'boot camp', href: null}
+        /**
+         * Boot camp routes
+         */
+        bootCamp: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Boot Camp', href: null}
+        ],
+        course: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Boot Camp', href: `/boot-camp`},
+            {icon: null, title: 'Course', href: null}
+        ],
+        lesson: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Boot Camp', href: `/boot-camp`},
+            {icon: null, title: 'Course', href: null},
+            {icon: null, title: 'Lesson', href: null}
         ],
 
-        // live trading routes
-        live_trading: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'live trading', href: null}
+        /**
+         * Live trading routes
+         */
+        liveTrading: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Live Trading', href: null}
+        ],
+        liveTradingSession: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Live Trading', href: `/live-trading`},
+            {icon: null, title: 'Session', href: null}
         ],
 
-        // store
+        /**
+         * Marketplace routes
+         */
         marketplace: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'marketplace', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Marketplace', href: null}
         ],
         productDetail: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: <FaStore />, title: 'marketplace', href: `/marketplace`},
-            {icon: null, title: 'product detail', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: <FaStore />, title: 'Marketplace', href: `/marketplace`},
+            {icon: null, title: 'Product detail', href: null}
         ],
 
-        // datasets routes
+        /**
+         * Datasets routes
+         */
         datasets: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'datasets', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Datasets', href: null}
+        ],
+        datasetDetail: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Datasets', href: `/datasets`},
+            {icon: null, title: 'Dataset detail', href: null}
         ],
 
-        // support routes
+        /**
+         * Support routes
+         */
         support: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'support', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Support', href: null}
+        ],
+        supportTicket: [
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'Support', href: `/support`},
+            {icon: null, title: 'Ticket', href: null}
         ],
 
-        // user settings
+        /**
+         * User settings routes
+         */
         settings: [
-            {icon: <FaHome />, title: 'dashboard', href: `/`},
-            {icon: null, title: 'user settings', href: null}
+            {icon: <FaHome />, title: 'Dashboard', href: `/`},
+            {icon: null, title: 'User settings', href: null}
         ],
     },
     guest: {
@@ -200,8 +290,6 @@ const { authed, guest } = PATHS;
 
 const routes = (isAuthed: boolean) => {
 
-    // switch()
-
     return [
         {
             path: '/',
@@ -211,14 +299,24 @@ const routes = (isAuthed: boolean) => {
                     path: authed.dashboard,
                     element: <Dashboard />
                 },
+
+                /**
+                 * War room routes
+                 */
                 {
-                    path: authed.war_room,
+                    path: authed.warRoom,
                     element: <WarRoom />
                 },
+
+                /**
+                 * Lab routes
+                 */
                 {
                     path: authed.lab,
                     element: <Lab />,
                 },
+
+                // projects
                 {
                     path: authed.projects,
                     element: <Projects />
@@ -236,6 +334,20 @@ const routes = (isAuthed: boolean) => {
                     element: <ProjectTest />
                 },
                 {
+                    path: authed.projectOptimizationSetup,
+                    element: <ProjectOptimizationSetup />
+                },
+                {
+                    path: authed.projectOptimization,
+                    element: <ProjectOptimization />
+                },
+                {
+                    path: authed.projectLiveSetup,
+                    element: <ProjectLiveSetup />
+                },
+
+                // indicators
+                {
                     path: authed.indicators,
                     element: <Indicators />
                 },
@@ -251,14 +363,40 @@ const routes = (isAuthed: boolean) => {
                     path: authed.indicatorTest,
                     element: <IndicatorTest />
                 },
+
+                // signals
+
+                /**
+                 * Boot camp routes
+                 */
                 {
-                    path: authed.boot_camp,
+                    path: authed.bootCamp,
                     element: <BootCamp />
                 },
                 {
-                    path: authed.live_trading,
+                    path: authed.course,
+                    element: <BootCampCourse />
+                },
+                {
+                    path: authed.lesson,
+                    element: <BootCampLesson />
+                },
+
+                /**
+                 * Live trading routes
+                 */
+                {
+                    path: authed.liveTrading,
                     element: <LiveTrading />
                 },
+                {
+                    path: authed.liveTradingSession,
+                    element: <LiveTradingSession />
+                },
+
+                /**
+                 * Marketplace routes
+                 */
                 {
                     path: authed.marketplace,
                     element: <Marketplace />
@@ -267,14 +405,34 @@ const routes = (isAuthed: boolean) => {
                     path: authed.productDetail,
                     element: <ProductDetail />
                 },
+
+                /**
+                 * Datasets routes
+                 */
                 {
                     path: authed.datasets,
                     element: <Datasets />
                 },
                 {
+                    path: authed.datasetDetail,
+                    element: <DatasetDetail />
+                },
+
+                /**
+                 * Support routes
+                 */
+                {
                     path: authed.support,
                     element: <Support />
                 },
+                {
+                    path: authed.supportTicket,
+                    element: <SupportTicket />
+                },
+
+                /**
+                 * User settings routes
+                 */
                 {
                     path: authed.settings,
                     element: <UserSettings />,

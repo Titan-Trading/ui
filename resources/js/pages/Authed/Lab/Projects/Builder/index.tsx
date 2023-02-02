@@ -31,19 +31,18 @@ const Builder = () => {
     const [ pConsoleText, setPConsoleText ] = useState<string>('');
 
     const addConsoleLine = (f: any, v: any, text: string) => {
-        f(v + `[${(new Date()).toISOString()}]: ` + text + "\n\r");
+        const date = new Date();
+        // const timestamp = date.getUTCFullYear() + '/' + (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+        const timestamp = date.toLocaleString();
+
+        f(v + `[${timestamp}]: ` + text + "\n\r");
     };
 
-    // load project details from api
+    // setup websocket handlers and subscribe to build events
     useEffect(() => {
-        dispatch(setTitle(`Project - ${projectId}`));
-
-        addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy loading...');
-
-        if(socket) {
-            socket.on('connect', () => {
-                socket.emit('join_channel', 'STRATEGY_BUILDER:*:' + projectId);
-            });
+        if(socket && projectId) {
+            // subscribe to build events
+            socket.emit('join_channel', 'STRATEGY_BUILDER:*:' + projectId);
 
             socket.on('message', (message) => {
                 if(message.meta.category !== 'STRATEGY_BUILDER') {
@@ -52,6 +51,10 @@ const Builder = () => {
 
                 if(message.meta.type === 'BUILD_COMPLETED') {
                     addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy built successfully in ' + message.data.buildTime + 'ms');
+
+                    setProject(message.data.strategy);
+                    setLastUpdated(message.data.strategy.updated_at);
+                    setBuildVersion(message.data.strategy.algorithm_version);
                 }
                 else if(message.meta.type === 'ERROR') {
                     addConsoleLine(setPConsoleText, pConsoleText, 'Strategy failed to build!');
@@ -62,13 +65,25 @@ const Builder = () => {
             });
         }
 
+        // unmount
+        return () => {
+            if(socket) {
+                socket.emit('leave_channel', 'STRATEGY_BUILDER:*:' + projectId);
+            }
+        };
+    }, [socket, projectId]);
+
+    // load project details from api
+    useEffect(() => {
         if(projectId) {
+            dispatch(setTitle(`Project - ${projectId}`));
+
             getBot(parseInt(projectId)).then(({data}) => {
                 setProject(data);
                 setLastUpdated(data.updated_at);
                 setBuildVersion(data.algorithm_version);
 
-                addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy loaded successfully');
+                addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy successfully loaded');
             }).catch(e => {
                 console.log(e);
 
@@ -80,7 +95,7 @@ const Builder = () => {
             // project is not found redirect to project list view
             navigate(`/lab/projects`);
         }
-    }, [projectId, socket]);
+    }, [projectId]);
 
     return (
         <>
@@ -101,16 +116,17 @@ const Builder = () => {
                             onChange={(event) => {
                                 project.name = event.currentTarget.value;
 
-                                addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy being saved...');
+                                // addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy being saved...');
 
                                 // debounce and send update to api
                                 clearTimeout(autosaveNameHandle);
                                 const saveNameTimeout = setTimeout(() => {
                                     updateBot(project.id, project).then(({data}) => {
+                                        setProject(data);
                                         setLastUpdated(data.updated_at);
                                         setBuildVersion(data.algorithm_version);
                                         setShowForm(false);
-                                        addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
+                                        // addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
                                     });
                                 }, 300);
                                 setAutoSaveNameHandle(saveNameTimeout);
@@ -124,22 +140,23 @@ const Builder = () => {
                     </Grid.Col>
                     <Grid.Col span={12} style={{textAlign: 'right'}}>
                         {/* Buttons/Controls */}
-                        <Button disabled={buildVersion === project.algorithm_version} onClick={() => {
+                        <Button disabled={/*buildVersion == project.algorithm_version*/false} onClick={() => {
                             updateBot(project.id, project).then(({data}) => {
+                                setProject(data);
                                 setLastUpdated(data.updated_at);
                                 setBuildVersion(data.algorithm_version);
-                                addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
+                                // addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
                             });
                         }}>Build &nbsp;<FaCog /></Button>&nbsp;
-                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
+                        <Button disabled={buildVersion != project.algorithm_version} onClick={() => {
                             // go to backtest setup page
                             navigate(`/lab/projects/${projectId}/backtest-setup`);
                         }}>Backtest &nbsp;<FaChevronCircleRight /></Button>&nbsp;
-                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
+                        <Button disabled={buildVersion != project.algorithm_version} onClick={() => {
                             // go to live setup page
-                            navigate(`/lab/projects/${projectId}/optimize-setup`);
+                            navigate(`/lab/projects/${projectId}/optimization-setup`);
                         }}>Optimize &nbsp;<BiUpvote /></Button>&nbsp;
-                        <Button disabled={buildVersion !== project.algorithm_version} onClick={() => {
+                        <Button disabled={buildVersion != project.algorithm_version} onClick={() => {
                             // go to live setup page
                             navigate(`/lab/projects/${projectId}/live-setup`);
                         }}>Go Live &nbsp;<BsLightning /></Button>
@@ -152,7 +169,7 @@ const Builder = () => {
                         height="64vh"
                         defaultLanguage="typescript"
                         theme="vs-dark"
-                        path={`inmemory://models/${projectId}/Strategy.ts`}
+                        path={`inmemory://models/projects/${projectId}/Strategy.ts`}
                         value={project.algorithm_text}
                         options={{
                             minimap: { enabled: false },
@@ -186,32 +203,37 @@ const Builder = () => {
 
                             monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
-                            const defModel = monaco.editor.createModel(`class StrategyAlgorithm {
-                                setCash(cash) {
+                            let defModel = monaco.editor.getModel(monaco.Uri.parse(`inmemory://models/projects/${projectId}/Sandbox.ts`));
+                            if (!defModel) {
+                                const code = `class Sandbox {
 
-                                }
+                                    input(inputKey) {
 
-                                addSymbol(symbol, inteval) {
-                                    return 'ok';
-                                }
+                                    }
 
-                                addIndicator(symbol, indicatorName, options) {
-                                    return {isReady: () => true, getCurrentValue: () => 0};
-                                }
+                                    on(eventStream, callback) {
 
-                                getParameter(type, name) {
-                                    return 0;
-                                }
+                                    }
 
-                                calculateOrderQuantity(symbol, risk) {
-                                    return 0;
-                                }
+                                    limitOrder() {
 
-                                marketOrder(symbol, quantity, price = 0) {
+                                    }
+                                }`;
 
-                                }
-                            }`, "typescript", monaco.Uri.parse(`inmemory://models/${projectId}/StrategyAlgorithm.ts`));
-                            // editor.setModel(defModel);
+                                defModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(`inmemory://models/projects/${projectId}/Sandbox.ts`));
+                                // editor.setModel(defModel);
+                            }
+
+                            // custom keyboard shortcuts
+                            // save using cmd+s (ctrl+s on windows)
+                            editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+                                updateBot(project.id, project).then(({data}) => {
+                                    setProject(data);
+                                    setLastUpdated(data.updated_at);
+                                    setBuildVersion(data.algorithm_version);
+                                    // addConsoleLine(setCTConsoleText, ctConsoleText, 'Strategy saved');
+                                });
+                            }, 'save');
 
                         }}
                         onValidate={(markers) => {
@@ -222,7 +244,7 @@ const Builder = () => {
 
                 {/* Debug Console */}
                 <SegmentedControl 
-                    size="lg"
+                    size="sm"
                     fullWidth
                     value={tab}
                     onChange={setTab}

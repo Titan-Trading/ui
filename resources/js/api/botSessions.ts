@@ -17,3 +17,27 @@ export const createBotSession = (data: IBotSession) => Request({
     url: `${API_URL}/trading/bots/${data.bot_id}/sessions`,
     data: data
 });
+
+export const updateBotSession = (data: IBotSession) => Request({
+    method: 'PUT',
+    url: `${API_URL}/trading/bots/${data.bot_id}/sessions/${data.id}`,
+    data: data
+});
+
+export const deleteBotSession = (data: IBotSession) => Request({
+    method: 'DELETE',
+    url: `${API_URL}/trading/bots/${data.bot_id}/sessions/${data.id}`
+});
+
+export const stopBotSession = (data: IBotSession, pausedAt: any) => Request({
+    method: 'POST',
+    url: `${API_URL}/trading/bots/${data.bot_id}/sessions/${data.id}/stop`,
+    data: {
+        paused_at: pausedAt
+    }
+});
+
+export const resumeBotSession = (data: IBotSession) => Request({
+    method: 'POST',
+    url: `${API_URL}/trading/bots/${data.bot_id}/sessions/${data.id}/resume`
+});

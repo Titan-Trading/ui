@@ -33,7 +33,7 @@ const ExchangeAccounts = () => {
             data = data.map((d: IExchangeAccount) => {
                 return {
                     api_key: d.api_key,
-                    name: d.exchange.name,
+                    name: d.name,
                     id: d.id,
                     user_id: d.user_id,
                     wallet_private_key: d.wallet_private_key
@@ -65,7 +65,7 @@ const ExchangeAccounts = () => {
 
             {error ? (
                 <Alert style={{ marginTop: '25px' }} icon={<HiXCircle />} color="red">
-                    Error: Unable to retrieve exchange accounts
+                    Error: unable to retrieve exchange accounts
                 </Alert>
             ) : (
                 <ExchangeAccountList 

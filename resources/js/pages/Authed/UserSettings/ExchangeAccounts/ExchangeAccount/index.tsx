@@ -17,7 +17,9 @@ interface IExchangeAccount {
 
 export interface IFormData {
     exchange_id: any;
-    connection_option?: any;
+    name: string;
+    // connection_option?: any;
+    api_version: string;
     api_key?: string;
     api_key_secret?: string;
     api_key_passphrase?: string;
@@ -49,7 +51,7 @@ const ExchangeAccount = ({
         <Modal
             opened={opened}
             onClose={() => handleClose()}
-            title={isEmpty(formData) ? 'Connect an Exchange Account' : 'Edit Exchange Account'}
+            title={isEmpty(formData) ? 'Connect an exchange account' : 'Edit exchange account'}
             size="lg"
             closeOnEscape={false}
             closeOnClickOutside={false}

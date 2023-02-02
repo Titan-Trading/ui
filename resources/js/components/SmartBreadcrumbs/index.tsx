@@ -49,7 +49,7 @@ export default function SmartBreadcrumbs() {
             }
 
             const crumbs = matchedBreadCrumbs.map((item: any, index: any) => (
-                item.href ? <Link to={item.href} key={index}>{item.icon ? item.icon : item.title}</Link> : <Text key={index}>{item.title}</Text>
+                item.href ? <Link to={item.href} style={{color: 'grey'}} key={index}>{item.icon ? item.icon : item.title}</Link> : <Text key={index}>{item.title}</Text>
             ));
             setBreadCrumbs(crumbs);
         }

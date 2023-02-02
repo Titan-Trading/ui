@@ -6,4 +6,5 @@ export default interface IBotSession {
     parameters: any;
     mode: string;
     active: boolean;
+    paused_at: string | null;
 };
